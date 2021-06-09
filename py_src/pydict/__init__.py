@@ -9,7 +9,7 @@ from PySide2 import QtCore, QtWidgets, QtUiTools
 from pydict.hjenglish_jp_core import HJEnglishWebDriverCore
 
 UiFileDir: str = os.path.dirname(inspect.getfile(pydict))
-UriFilePath: str = os.path.join(UiFileDir, "dict.ui")
+UriFilePath: str = os.path.join(UiFileDir, "ui", "dict.ui")
 
 Ui_MainWindow, QtBaseClass = QtUiTools.loadUiType(UriFilePath)
 

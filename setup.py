@@ -22,7 +22,7 @@ setuptools.setup(
     ],
     packages=['pydict'],
     package_dir={"pydict": "py_src/pydict"},
-    package_data={'pydict': ['dict.ui']},
+    package_data={'pydict': ['ui/dict.ui']},
     python_requires=">=3.8",
     install_requires=['selenium', 'hanziconv', 'PySide2', 'pyperclip', 'requests', 'bs4'],
 )
