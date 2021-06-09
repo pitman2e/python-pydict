@@ -1,6 +1,6 @@
 # Maintainer: pitman2e
 pkgname=python-pydict
-pkgver=0.1
+pkgver=0.1.1
 pkgrel=1
 pkgdesc="A Dictionary Scalper"
 arch=('any')
