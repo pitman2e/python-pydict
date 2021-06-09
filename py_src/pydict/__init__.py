@@ -48,7 +48,7 @@ class DictQtGui(QtWidgets.QMainWindow, Ui_MainWindow):
                     
         return False
 
-    def cbbTranType_currentTextChanged(self):
+    def cbbTranType_currentTextChanged(self) -> None:
         if self.cbbTranType.currentText() == "JP":
             if self.core == None:
                 self.core = HJEnglishWebDriverCore()
@@ -73,7 +73,7 @@ class DictQtGui(QtWidgets.QMainWindow, Ui_MainWindow):
         else:
             self.getDictionaryResult(words[0])
 
-    def getDictionaryResult(self, word2Search) -> None:
+    def getDictionaryResult(self, word2Search: str) -> None:
         self.btnCheck.setDisabled(True)
 
         try:
