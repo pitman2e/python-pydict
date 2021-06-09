@@ -59,7 +59,8 @@ class DictQtGui(QtWidgets.QMainWindow, Ui_MainWindow):
             print("Close Core")
 
     def closeEvent(self, event) -> None:
-        self.core.close()
+        if self.core != None: 
+            self.core.close()
 
     def btnCheck_Clicked(self) -> None:
         self.getDictionaryResult(self.txtWord2Check.toPlainText())
