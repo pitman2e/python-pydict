@@ -59,7 +59,7 @@ class DictQtGui(QtWidgets.QMainWindow, Ui_MainWindow):
             print("Close Core")
 
     def closeEvent(self, event) -> None:
-        if self.core != None: 
+        if self.core is not None: 
             self.core.close()
 
     def btnCheck_Clicked(self) -> None:
