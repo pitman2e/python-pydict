@@ -15,4 +15,5 @@ package() {
   cd "${srcdir}/python-pydict"
   python3 setup.py install --root="$pkgdir" --optimize=1 || return 1
   install -Dm755 "usr/bin/pydict" "${pkgdir}/usr/bin/pydict"
+  install -Dm755 "usr/share/applications/pydict.desktop" "${pkgdir}/usr/share/applications/pydict.desktop"
 }

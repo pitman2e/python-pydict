@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=PyDict
+Comment=A Dictionary Scalper
+Exec=pydict
+Categories=Education;Languages;
+Terminal=false
+Type=Application
+Version=1.0
