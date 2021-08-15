@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="pydict",
-    version="0.1.2",
+    version="0.1.3",
     author="pitman2e",
     author_email="pitman2e at gm__l c_m",
     description="A Dictionary Scalper",
@@ -24,5 +24,5 @@ setuptools.setup(
     package_dir={"pydict": "py_src/pydict"},
     package_data={'pydict': ['ui/dict.ui']},
     python_requires=">=3.8",
-    install_requires=['selenium', 'hanziconv', 'PySide2', 'pyperclip', 'requests', 'bs4'],
+    install_requires=['selenium', 'hanziconv', 'PyQt5', 'pyperclip', 'requests', 'bs4'],
 )

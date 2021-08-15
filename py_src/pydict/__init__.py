@@ -5,19 +5,16 @@ import pyperclip
 import traceback
 import pydict.yahoo_dict
 import os
-from PySide2 import QtCore, QtWidgets, QtUiTools
+from PyQt5 import QtCore, QtWidgets, uic
 from pydict.hjenglish_jp_core import HJEnglishWebDriverCore
 
 UiFileDir: str = os.path.dirname(inspect.getfile(pydict))
 UriFilePath: str = os.path.join(UiFileDir, "ui", "dict.ui")
 
-Ui_MainWindow, QtBaseClass = QtUiTools.loadUiType(UriFilePath)
-
-class DictQtGui(QtWidgets.QMainWindow, Ui_MainWindow):
+class DictQtGui(QtWidgets.QMainWindow):
     def __init__(self) -> None:
-        QtWidgets.QMainWindow.__init__(self)
-        Ui_MainWindow.__init__(self)
-        self.setupUi(self)
+        super(DictQtGui, self).__init__()
+        uic.loadUi(UriFilePath, self)
 
         self.cbbTranType: QtWidgets.QComboBox
         self.btnCheckNext: QtWidgets.QPushButton

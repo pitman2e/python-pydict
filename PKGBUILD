@@ -1,10 +1,10 @@
 # Maintainer: pitman2e
 pkgname=python-pydict
-pkgver=0.1.2
+pkgver=0.1.3
 pkgrel=1
 pkgdesc="A Dictionary Scalper"
 arch=('any')
-depends=("python-beautifulsoup4" "python-selenium" "python-pyperclip" "python-requests" "pyside2" "python-hanziconv")
+depends=("python-beautifulsoup4" "python-selenium" "python-pyperclip" "python-requests" "python-pyqt5" "python-hanziconv")
 makedepends=('git' 'python>=3.8')
 conflicts=()
 provides=()
