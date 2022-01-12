@@ -3,13 +3,13 @@ import os
 import inspect
 import pyperclip
 import traceback
-import pydict.yahoo_dict
+from . import yahoo_dict
 import os
 from PyQt5 import QtCore, QtWidgets, uic
-from pydict.hjenglish_jp_core import HJEnglishWebDriverCore
+from .hjenglish_jp_core import HJEnglishWebDriverCore
 
-UiFileDir: str = os.path.dirname(inspect.getfile(pydict))
-UriFilePath: str = os.path.join(UiFileDir, "ui", "dict.ui")
+UiFileDir: str = os.path.dirname(os.path.dirname(__file__))
+UriFilePath: str = os.path.join(UiFileDir, "pydict", "ui", "dict.ui")
 
 class DictQtGui(QtWidgets.QMainWindow):
     def __init__(self) -> None:
@@ -21,6 +21,7 @@ class DictQtGui(QtWidgets.QMainWindow):
         self.btnChecked: QtWidgets.QPushButton
         self.btnCopyWord: QtWidgets.QPushButton
         self.txtWord2Check: QtWidgets.QTextEdit
+        self.txtSuggestion: QtWidgets.QTextEdit
 
         self.btnCheck.clicked.connect(self.btnCheck_Clicked)
         self.btnCheckNext.clicked.connect(self.btnCheckNext_Clicked)
@@ -77,18 +78,20 @@ class DictQtGui(QtWidgets.QMainWindow):
         try:
             result: str
             isOK: bool
+            suggestion: str
             
             if self.cbbTranType.currentText() == "JP":
-                result, isOK = self.core.GetDictionaryResult(word2Search)
+                result, isOK, suggestion = self.core.GetDictionaryResult(word2Search)
             elif self.cbbTranType.currentText() == "EN":
-                resultDict = pydict.yahoo_dict.Check_EN_ZH(word2Search)
-                result, isOK = resultDict['definition'], resultDict['isSuccess']
+                resultDict = yahoo_dict.Check_EN_ZH(word2Search)
+                result, isOK, suggestion = resultDict['definition'], resultDict['isSuccess'], resultDict["suggestion"]
             else:
                 raise Exception("Unrecognised Dictionary Type")
                 
             if (isOK):
                 self.txtWord.setText(word2Search)
             self.txtResult.setText(result)
+            self.txtSuggestion.setText(suggestion)
 
         except Exception:
             self.txtResult.setText("An error has occured: \n" + traceback.format_exc())
@@ -100,6 +103,3 @@ def run() -> None:
     window = DictQtGui()
     window.show()
     sys.exit(app.exec_())
-
-if __name__ == "__main__":
-    run()

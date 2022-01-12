@@ -47,6 +47,9 @@
      <widget class="QLineEdit" name="txtWord"/>
     </item>
     <item>
+     <widget class="QLineEdit" name="txtSuggestion"/>
+    </item>
+    <item>
      <widget class="QTextEdit" name="txtResult">
       <property name="readOnly">
        <bool>true</bool>
