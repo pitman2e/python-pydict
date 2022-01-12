@@ -46,6 +46,6 @@ def Check_EN_ZH(word: str, recursiveDepth=0):
         if (len(suggestion_ele) > 0):
             result["suggestion"] = suggestion_ele[0].text.strip().replace("你是不是要查 ", "")
         else:
-            result["suggestion"]
+            result["suggestion"] = ""
 
     return result
