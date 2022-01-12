@@ -40,9 +40,10 @@ class DictQtGui(QtWidgets.QMainWindow):
     def eventFilter(self, source: QtCore.QObject, event: QtCore.QEvent) -> None:
         if source is self.txtWord2Check:
             if event.type() == QtCore.QEvent.KeyPress:
-                if (event.modifiers() == QtCore.Qt.ShiftModifier) and (event.key() & QtCore.Qt.Key_Enter):
-                    self.btnCheck_Clicked()
-                    return True
+                if (event.modifiers() & QtCore.Qt.ShiftModifier):
+                    if ((event.key() == QtCore.Qt.Key_Enter) or (event.key() == QtCore.Qt.Key_Return)):
+                        self.btnCheck_Clicked()
+                        return True
                     
         return False
 
