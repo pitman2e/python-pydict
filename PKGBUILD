@@ -1,5 +1,5 @@
 # Maintainer: pitman2e
-pkgname=python-pydict
+pkgname=pydict
 pkgver=0.1.3
 pkgrel=1
 pkgdesc="A Dictionary Scalper"
