@@ -19,7 +19,6 @@ def Check_EN_ZH(word: str, recursiveDepth=0):
     doc = BeautifulSoup(htmltext, 'html.parser')
     elements = doc.select(".sys_dict_word_card")
     suggestion_ele = doc.select(".sys_dict_sugg")
-    
 
     if (len(elements) > 0):
         hasVA = False
@@ -44,6 +43,9 @@ def Check_EN_ZH(word: str, recursiveDepth=0):
     else:
         result["isSuccess"] = False
         result["definition"] = ""
-        result["suggestion"] = suggestion_ele[0].text.strip().replace("你是不是要查 ", "")
+        if (len(suggestion_ele) > 0):
+            result["suggestion"] = suggestion_ele[0].text.strip().replace("你是不是要查 ", "")
+        else:
+            result["suggestion"]
 
     return result
