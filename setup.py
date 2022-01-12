@@ -20,7 +20,7 @@ setuptools.setup(
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         "Operating System :: OS Independent",
     ],
-    packages=['pydict'],
+    packages=['pydict', 'yahoo_dict'],
     package_dir={"pydict": "py_src/pydict"},
     package_data={'pydict': ['ui/dict.ui']},
     python_requires=">=3.8",
