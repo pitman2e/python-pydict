@@ -2,10 +2,12 @@ import sys
 import os
 import pyperclip
 import traceback
+
 from . import yahoo_dict
 import os
 from PyQt5 import QtCore, QtWidgets, uic
 from .hjenglish_jp_core import HJEnglishWebDriverCore
+from .dict_result import DictResult
 
 UiFileDir: str = os.path.dirname(os.path.dirname(__file__))
 UriFilePath: str = os.path.join(UiFileDir, "pydict", "ui", "dict.ui")
@@ -76,22 +78,19 @@ class qt_gui(QtWidgets.QMainWindow):
         self.btnCheck.setDisabled(True)
 
         try:
-            result: str
-            isOK: bool
-            suggestion: str
+            result: DictResult
             
             if self.cbbTranType.currentText() == "JP":
-                result, isOK, suggestion = self.core.GetDictionaryResult(word2Search)
+                result = self.core.GetDictionaryResult(word2Search)
             elif self.cbbTranType.currentText() == "EN":
-                resultDict = yahoo_dict.Check_EN_ZH(word2Search)
-                result, isOK, suggestion = resultDict['definition'], resultDict['isSuccess'], resultDict["suggestion"]
+                result = yahoo_dict.Check_EN_ZH(word2Search)
             else:
                 raise Exception("Unrecognised Dictionary Type")
                 
-            if (isOK):
-                self.txtWord.setText(word2Search)
-            self.txtResult.setText(result)
-            self.txtSuggestion.setText(suggestion)
+            if (result.is_success):
+                self.txtWord.setText(result.word)
+            self.txtResult.setText(result.definition)
+            self.txtSuggestion.setText(result.suggestion)
 
         except Exception:
             self.txtResult.setText("An error has occured: \n" + traceback.format_exc())

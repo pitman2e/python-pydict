@@ -8,6 +8,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.chrome.options import Options
 from typing import Tuple
+from .dict_result import DictResult
 
 class HJEnglishWebDriverCore:
     def __init__(self) -> None:
@@ -21,14 +22,14 @@ class HJEnglishWebDriverCore:
         self.prevUrl = ""
         self.prevWord2Search = ""
     
-    def GetDictionaryResult(self, word2Search: str) -> Tuple[str, bool, str]:
+    def GetDictionaryResult(self, word2Search: str) -> DictResult:
         if (word2Search.strip() == ""):
-            return ""
+            return DictResult()
 
         prevUrl = self.driver.current_url
         
         if (not word2Search):
-            return ""
+            return DictResult()
 
         if (self.prevWord2Search != word2Search):
             WebDriverWait(self.driver, 10).until(expected_conditions.presence_of_element_located((By.CSS_SELECTOR, ".search-input")))
@@ -43,17 +44,19 @@ class HJEnglishWebDriverCore:
                 try:
                     WebDriverWait(self.driver, 10).until(lambda d: prevUrl != d.current_url)
                 except:
-                    return "Failed to load !", False, ""
+                    result = DictResult()
+                    result.definition = "Failed to load !"
+                    return result
 
         self.prevWord2Search = word2Search
 
         WebDriverWait(self.driver, 10).until(expected_conditions.presence_of_element_located((By.CSS_SELECTOR, ".word-details-pane-header,.word-suggestions,.word-details-tab,.word-notfound")))
 
         if (self.driver.find_elements_by_css_selector(".word-suggestions")):
-            return "Word not found !", True, ""
+            return DictResult(suggestion="", is_success=True, definition="Word not found !", word=word2Search)
 
         if (self.driver.find_elements_by_css_selector(".word-notfound")):
-            return "Word not found !", True, ""
+            return DictResult(suggestion="", is_success=True, definition="Word not found !", word=word2Search)
 
         tabs = self.driver.find_elements_by_css_selector(".word-details-tab")
 
@@ -71,7 +74,7 @@ class HJEnglishWebDriverCore:
                 resultTC = "\n".join(resultSplit[(1 if i > 0 else 0):]) + "\n\n" #First line is the same thro-out all tabs, no need except 1st tab
                 resultStr += resultTC
                 i += 1
-            return resultStr.strip("\n"), True, ""
+            return DictResult(suggestion="", is_success=True, definition=resultStr.strip("\n"), word=word2Search)
         else:
             result = self.driver.find_element(By.CSS_SELECTOR, ".word-details-pane-header").text
             resultSplit = result.splitlines()
@@ -79,7 +82,7 @@ class HJEnglishWebDriverCore:
                 resultSplit[i] = HanziConv.toTraditional(resultSplit[i])
             resultTC = "\n".join(resultSplit)
             resultStr += resultTC
-            return resultStr.strip("\n"), True, ""
+            return DictResult(suggestion="", is_success=True, definition=resultStr.strip("\n"), word=word2Search)
         
     def close(self) -> None:
         self.driver.quit()
