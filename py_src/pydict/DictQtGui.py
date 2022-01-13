@@ -1,12 +1,11 @@
 import sys
 import os
-import inspect
 import pyperclip
 import traceback
-from . import yahoo_dict
+import yahoo_dict
 import os
 from PyQt5 import QtCore, QtWidgets, uic
-from .hjenglish_jp_core import HJEnglishWebDriverCore
+from hjenglish_jp_core import HJEnglishWebDriverCore
 
 UiFileDir: str = os.path.dirname(os.path.dirname(__file__))
 UriFilePath: str = os.path.join(UiFileDir, "pydict", "ui", "dict.ui")
@@ -26,6 +25,7 @@ class DictQtGui(QtWidgets.QMainWindow):
         self.btnCheck.clicked.connect(self.btnCheck_Clicked)
         self.btnCheckNext.clicked.connect(self.btnCheckNext_Clicked)
 
+        self.cbbTranType.addItem("Test")
         self.cbbTranType.addItem("EN")
         self.cbbTranType.addItem("JP")
         
@@ -40,9 +40,10 @@ class DictQtGui(QtWidgets.QMainWindow):
     def eventFilter(self, source: QtCore.QObject, event: QtCore.QEvent) -> None:
         if source is self.txtWord2Check:
             if event.type() == QtCore.QEvent.KeyPress:
-                if (event.modifiers() == QtCore.Qt.ShiftModifier) and (event.key() & QtCore.Qt.Key_Enter):
-                    self.btnCheck_Clicked()
-                    return True
+                if (event.modifiers() & QtCore.Qt.ShiftModifier):
+                    if ((event.key() == QtCore.Qt.Key_Enter) or (event.key() == QtCore.Qt.Key_Return)):
+                        self.btnCheck_Clicked()
+                        return True
                     
         return False
 
