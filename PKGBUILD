@@ -1,11 +1,11 @@
 # Maintainer: pitman2e
 pkgname=pydict
-pkgver=0.1.3
+pkgver=0.2.0
 pkgrel=1
 pkgdesc="A Dictionary Scalper"
 arch=('any')
 depends=("python-beautifulsoup4" "python-selenium" "python-pyperclip" "python-requests" "python-pyqt5" "python-hanziconv")
-makedepends=('git' 'python>=3.8')
+makedepends=('git' 'python>=3.10')
 conflicts=()
 provides=()
 source=("git+https://github.com/pitman2e/python-pydict.git#branch=master")
