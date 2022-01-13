@@ -1,5 +1,6 @@
 pkg/
 python-pydict/
+pkg/
 *.pkg.tar.zst
 
 # Byte-compiled / optimized / DLL files

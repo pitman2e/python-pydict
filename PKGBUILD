@@ -1,5 +1,5 @@
 # Maintainer: pitman2e
-pkgname=python-pydict
+pkgname=pydict
 pkgver=0.1.3
 pkgrel=1
 pkgdesc="A Dictionary Scalper"
@@ -8,7 +8,7 @@ depends=("python-beautifulsoup4" "python-selenium" "python-pyperclip" "python-re
 makedepends=('git' 'python>=3.8')
 conflicts=()
 provides=()
-source=("git+https://github.com/pitman2e/python-pydict.git#branch=dev")
+source=("git+https://github.com/pitman2e/python-pydict.git#branch=master")
 sha512sums=("SKIP")
 
 package() {

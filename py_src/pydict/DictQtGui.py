@@ -2,10 +2,10 @@ import sys
 import os
 import pyperclip
 import traceback
-import yahoo_dict
+from . import yahoo_dict
 import os
 from PyQt5 import QtCore, QtWidgets, uic
-from hjenglish_jp_core import HJEnglishWebDriverCore
+from .hjenglish_jp_core import HJEnglishWebDriverCore
 
 UiFileDir: str = os.path.dirname(os.path.dirname(__file__))
 UriFilePath: str = os.path.join(UiFileDir, "pydict", "ui", "dict.ui")

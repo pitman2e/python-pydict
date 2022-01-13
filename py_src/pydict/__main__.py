@@ -1,2 +1,2 @@
-import DictQtGui
-DictQtGui.run()
+import pydict
+pydict.run()
