@@ -16,6 +16,23 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Word to Check:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QComboBox" name="cbbTranType"/>
+      </item>
+     </layout>
+    </item>
+    <item>
      <widget class="QTextEdit" name="txtWord2Check">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -41,13 +58,31 @@
      </widget>
     </item>
     <item>
-     <widget class="QComboBox" name="cbbTranType"/>
+     <widget class="QLabel" name="label_2">
+      <property name="text">
+       <string>Checked Word:</string>
+      </property>
+     </widget>
     </item>
     <item>
      <widget class="QLineEdit" name="txtWord"/>
     </item>
     <item>
+     <widget class="QLabel" name="label_3">
+      <property name="text">
+       <string>Suggestion:</string>
+      </property>
+     </widget>
+    </item>
+    <item>
      <widget class="QLineEdit" name="txtSuggestion"/>
+    </item>
+    <item>
+     <widget class="QLabel" name="label_4">
+      <property name="text">
+       <string>Definition:</string>
+      </property>
+     </widget>
     </item>
     <item>
      <widget class="QTextEdit" name="txtResult">
