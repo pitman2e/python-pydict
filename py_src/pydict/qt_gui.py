@@ -2,6 +2,7 @@ import sys
 import os
 import pyperclip
 import traceback
+from typing import List
 
 from . import yahoo_dict
 import os
@@ -23,9 +24,11 @@ class qt_gui(QtWidgets.QMainWindow):
         self.btnCopyWord: QtWidgets.QPushButton
         self.txtWord2Check: QtWidgets.QTextEdit
         self.txtSuggestion: QtWidgets.QTextEdit
+        self.lstHistory: QtWidgets.QListWidget
 
         self.btnCheck.clicked.connect(self.btnCheck_Clicked)
         self.btnCheckNext.clicked.connect(self.btnCheckNext_Clicked)
+        self.lstHistory.currentItemChanged.connect(self.lstHistory_currentItemChanged)
 
         self.cbbTranType.addItem("EN")
         self.cbbTranType.addItem("JP")
@@ -57,12 +60,23 @@ class qt_gui(QtWidgets.QMainWindow):
             self.core.close()
             self.core = None
             print("Close Core")
+    
+    def lstHistory_currentItemChanged(self, current: QtWidgets.QListWidgetItem, prev: QtWidgets.QListWidgetItem) -> None:
+        word2Change: str = current.text()
+        word2Check: str = self.txtWord2Check.toPlainText()
+        txtWordsCheck: List[str] = word2Check.split("\n")
+        if word2Change in txtWordsCheck:
+            txtWordsCheck.remove(word2Change)
+        self.txtWord2Check.setText(word2Change + "\n" + "\n".join(txtWordsCheck))
 
     def closeEvent(self, event) -> None:
         if self.core is not None: 
             self.core.close()
 
     def btnCheck_Clicked(self) -> None:
+        newItem = QtWidgets.QListWidgetItem()
+        newItem.setText(self.txtWord2Check.toPlainText())
+        self.lstHistory.insertItem(0, newItem)
         self.getDictionaryResult(self.txtWord2Check.toPlainText())
     
     def btnCheckNext_Clicked(self) -> None:
