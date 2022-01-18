@@ -25,6 +25,7 @@ class qt_gui(QtWidgets.QMainWindow):
         self.txtWord2Check: QtWidgets.QTextEdit
         self.txtSuggestion: QtWidgets.QTextEdit
         self.lstHistory: QtWidgets.QListWidget
+        self.lblStatus: QtWidgets.QLabel
 
         self.btnCheck.clicked.connect(self.btnCheck_Clicked)
         self.btnCheckNext.clicked.connect(self.btnCheckNext_Clicked)
@@ -103,7 +104,11 @@ class qt_gui(QtWidgets.QMainWindow):
                 
             if (result.is_success):
                 self.txtWord.setText(result.word)
-            self.txtResult.setText(result.definition)
+                self.txtResult.setText(result.definition)
+                self.lblStatus.setText("")
+            else:
+                self.lblStatus.setText("Word definition not found")
+                
             self.txtSuggestion.setText(result.suggestion)
 
         except Exception:
