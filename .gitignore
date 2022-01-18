@@ -1,6 +1,7 @@
 pkg/
 python-pydict/
 *.pkg.tar.zst
+env/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
