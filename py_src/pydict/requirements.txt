@@ -1,0 +1,6 @@
+PyQt5 
+beautifulsoup4
+selenium
+pyperclip
+requests
+hanziconv
