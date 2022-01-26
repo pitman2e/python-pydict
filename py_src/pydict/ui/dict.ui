@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>513</width>
-    <height>437</height>
+    <height>473</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -42,7 +42,21 @@
          </widget>
         </item>
         <item>
-         <widget class="QComboBox" name="cbbTranType"/>
+         <widget class="QCheckBox" name="cbxIsMultiline">
+          <property name="text">
+           <string>Multiline</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="cbbTranType">
+          <property name="maximumSize">
+           <size>
+            <width>100</width>
+            <height>16777215</height>
+           </size>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>

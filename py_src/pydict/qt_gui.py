@@ -26,6 +26,7 @@ class qt_gui(QtWidgets.QMainWindow):
         self.txtSuggestion: QtWidgets.QTextEdit
         self.lstHistory: QtWidgets.QListWidget
         self.lblStatus: QtWidgets.QLabel
+        self.cbxIsMultiline: QtWidgets.QCheckBox
 
         self.btnCheck.clicked.connect(self.btnCheck_Clicked)
         self.btnCheckNext.clicked.connect(self.btnCheckNext_Clicked)
@@ -39,7 +40,6 @@ class qt_gui(QtWidgets.QMainWindow):
         #self.txtResult.installEventFilter(self) # No longer needed since copy function exists, keep for ref
         self.txtWord2Check.installEventFilter(self)
         self.cbbTranType.currentTextChanged.connect(self.cbbTranType_currentTextChanged)
-
         self.txtWord2Check.setFocus()
         
         self.core = None
@@ -47,9 +47,16 @@ class qt_gui(QtWidgets.QMainWindow):
     def eventFilter(self, source: QtCore.QObject, event: QtCore.QEvent) -> None:
         if source is self.txtWord2Check:
             if event.type() == QtCore.QEvent.KeyPress:
-                if (event.modifiers() & QtCore.Qt.ShiftModifier):
+                if (event.modifiers() & QtCore.Qt.ShiftModifier) or not self.cbxIsMultiline.isChecked():
                     if ((event.key() == QtCore.Qt.Key_Enter) or (event.key() == QtCore.Qt.Key_Return)):
                         self.btnCheck_Clicked()
+                        return True
+            if event.type() == QtCore.QEvent.FocusIn:
+                if not self.cbxIsMultiline.isChecked():
+                    if len(self.txtWord2Check.toPlainText()) > 0: #If selectAll at empty box => cursor not appearing
+                        # https://www.qtcentre.org/threads/31705-selectAll-in-QLineEdit-does-not-work?p=277477#post277477
+                        # Workaround mouse click cancels selectAll()
+                        QtCore.QTimer.singleShot(0, lambda: self.txtWord2Check.selectAll())
                         return True
                     
         return False
