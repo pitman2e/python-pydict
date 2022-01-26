@@ -39,6 +39,8 @@ class qt_gui(QtWidgets.QMainWindow):
         #self.txtResult.installEventFilter(self) # No longer needed since copy function exists, keep for ref
         self.txtWord2Check.installEventFilter(self)
         self.cbbTranType.currentTextChanged.connect(self.cbbTranType_currentTextChanged)
+
+        self.txtWord2Check.setFocus()
         
         self.core = None
 
