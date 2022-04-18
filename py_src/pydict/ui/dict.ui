@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>513</width>
-    <height>473</height>
+    <width>549</width>
+    <height>451</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -86,24 +86,38 @@
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="label_2">
-        <property name="text">
-         <string>Checked Word:</string>
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <property name="bottomMargin">
+         <number>0</number>
         </property>
-       </widget>
+        <item>
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>Checked Word:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="txtWord"/>
+        </item>
+       </layout>
       </item>
       <item>
-       <widget class="QLineEdit" name="txtWord"/>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>Suggestion:</string>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <property name="bottomMargin">
+         <number>0</number>
         </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLineEdit" name="txtSuggestion"/>
+        <item>
+         <widget class="QLabel" name="label_3">
+          <property name="text">
+           <string>Suggestion:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="txtSuggestion"/>
+        </item>
+       </layout>
       </item>
       <item>
        <widget class="QLabel" name="label_4">
