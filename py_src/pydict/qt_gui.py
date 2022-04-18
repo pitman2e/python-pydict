@@ -75,9 +75,13 @@ class qt_gui(QtWidgets.QMainWindow):
         word2Change: str = current.text()
         word2Check: str = self.txtWord2Check.toPlainText()
         txtWordsCheck: List[str] = word2Check.split("\n")
-        if word2Change in txtWordsCheck:
-            txtWordsCheck.remove(word2Change)
-        self.txtWord2Check.setText(word2Change + "\n" + "\n".join(txtWordsCheck))
+
+        if self.cbxIsMultiline.isChecked():
+            if word2Change in txtWordsCheck:
+                txtWordsCheck.remove(word2Change)
+            self.txtWord2Check.setText(word2Change + "\n" + "\n".join(txtWordsCheck))
+        else:
+            self.txtWord2Check.setText(word2Change)
 
     def closeEvent(self, event) -> None:
         if self.core is not None: 
