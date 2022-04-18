@@ -22,6 +22,7 @@ class qt_gui(QtWidgets.QMainWindow):
         self.btnCheckNext: QtWidgets.QPushButton
         self.btnChecked: QtWidgets.QPushButton
         self.btnCopyWord: QtWidgets.QPushButton
+        self.btnCopyResult: QtWidgets.QPushButton
         self.txtWord2Check: QtWidgets.QTextEdit
         self.txtSuggestion: QtWidgets.QTextEdit
         self.lstHistory: QtWidgets.QListWidget
