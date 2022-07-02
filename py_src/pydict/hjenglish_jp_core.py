@@ -52,21 +52,21 @@ class HJEnglishWebDriverCore:
 
         WebDriverWait(self.driver, 10).until(expected_conditions.presence_of_element_located((By.CSS_SELECTOR, ".word-details-pane-header,.word-suggestions,.word-details-tab,.word-notfound")))
 
-        if (self.driver.find_elements_by_css_selector(".word-suggestions")):
+        if (self.driver.find_elements(By.CSS_SELECTOR, ".word-suggestions")):
             return DictResult(suggestion="", is_success=True, definition="Word not found !", word=word2Search)
 
-        if (self.driver.find_elements_by_css_selector(".word-notfound")):
+        if (self.driver.find_elements(By.CSS_SELECTOR, ".word-notfound")):
             return DictResult(suggestion="", is_success=True, definition="Word not found !", word=word2Search)
 
-        tabs = self.driver.find_elements_by_css_selector(".word-details-tab")
+        tabs = self.driver.find_elements(By.CSS_SELECTOR, ".word-details-tab")
 
         resultStr = ""
         if tabs:
             i = 0
             for tab in tabs:
                 tab.click()
-                WebDriverWait(self.driver, 10).until(lambda d: len(d.find_elements_by_css_selector(".word-details-pane-header")) > i)
-                result = self.driver.find_elements_by_css_selector(".word-details-pane-header")[i].text
+                WebDriverWait(self.driver, 10).until(lambda d: len(d.find_elements(By.CSS_SELECTOR, ".word-details-pane-header")) > i)
+                result = self.driver.find_elements(By.CSS_SELECTOR, ".word-details-pane-header")[i].text
                 resultSplit = result.splitlines()
                 #1st/2nd lines are Japanese words, should not convert to TC
                 for j in range(2, len(resultSplit)): 
