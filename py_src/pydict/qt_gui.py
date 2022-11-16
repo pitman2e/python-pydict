@@ -9,6 +9,7 @@ import os
 from PyQt5 import QtCore, QtWidgets, uic
 from .hjenglish_jp_core import HJEnglishWebDriverCore
 from .dict_result import DictResult
+from .logger import logger
 
 UiFileDir: str = os.path.dirname(os.path.dirname(__file__))
 UriFilePath: str = os.path.join(UiFileDir, "pydict", "ui", "dict.ui")
@@ -18,9 +19,11 @@ class qt_gui(QtWidgets.QMainWindow):
         super(qt_gui, self).__init__()
         uic.loadUi(UriFilePath, self)
 
+        logger.set_log_widget(self.lstLog)
+
         self.cbbTranType: QtWidgets.QComboBox
         self.btnCheckNext: QtWidgets.QPushButton
-        self.btnChecked: QtWidgets.QPushButton
+        self.btnCheck: QtWidgets.QPushButton
         self.btnCopyWord: QtWidgets.QPushButton
         self.btnCopyResult: QtWidgets.QPushButton
         self.txtWord2Check: QtWidgets.QTextEdit
@@ -28,6 +31,7 @@ class qt_gui(QtWidgets.QMainWindow):
         self.lstHistory: QtWidgets.QListWidget
         self.lblStatus: QtWidgets.QLabel
         self.cbxIsMultiline: QtWidgets.QCheckBox
+        self.lstLog: QtWidgets.QListWidget
 
         self.btnCheck.clicked.connect(self.btnCheck_Clicked)
         self.btnCheckNext.clicked.connect(self.btnCheckNext_Clicked)
@@ -44,6 +48,8 @@ class qt_gui(QtWidgets.QMainWindow):
         self.txtWord2Check.setFocus()
         
         self.core = None
+
+        logger.log("Program initialised")
 
     def eventFilter(self, source: QtCore.QObject, event: QtCore.QEvent) -> None:
         if source is self.txtWord2Check:
@@ -66,11 +72,12 @@ class qt_gui(QtWidgets.QMainWindow):
         if self.cbbTranType.currentText() == "JP":
             if self.core == None:
                 self.core = HJEnglishWebDriverCore()
-                print("Init Core")
+                logger.log("Init HJ English Core")
         else:
             self.core.close()
             self.core = None
-            print("Close Core")
+            logger.log("Close HJ English Core")
+
     
     def lstHistory_currentItemChanged(self, current: QtWidgets.QListWidgetItem, prev: QtWidgets.QListWidgetItem) -> None:
         word2Change: str = current.text()

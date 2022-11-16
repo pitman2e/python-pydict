@@ -9,6 +9,7 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.chrome.options import Options
 from typing import Tuple
 from .dict_result import DictResult
+from .logger import logger
 
 class HJEnglishWebDriverCore:
     def __init__(self) -> None:
@@ -42,8 +43,11 @@ class HJEnglishWebDriverCore:
 
             if prevUrl:
                 try:
+                    logger.log(f'Waiting for URL change')
                     WebDriverWait(self.driver, 10).until(lambda d: prevUrl != d.current_url)
+                    logger.log(f'New URL loaded: {self.driver.current_url}')
                 except:
+                    logger.log("Failed to load")
                     result = DictResult()
                     result.definition = "Failed to load !"
                     return result
