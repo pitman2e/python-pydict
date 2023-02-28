@@ -6,7 +6,7 @@ from typing import List
 
 from . import yahoo_dict
 import os
-from PyQt5 import QtCore, QtWidgets, uic
+from PyQt6 import QtCore, QtWidgets, uic
 from .hjenglish_jp_core import HJEnglishWebDriverCore
 from .dict_result import DictResult
 from .logger import logger
@@ -53,12 +53,12 @@ class qt_gui(QtWidgets.QMainWindow):
 
     def eventFilter(self, source: QtCore.QObject, event: QtCore.QEvent) -> None:
         if source is self.txtWord2Check:
-            if event.type() == QtCore.QEvent.KeyPress:
-                if (event.modifiers() & QtCore.Qt.ShiftModifier) or not self.cbxIsMultiline.isChecked():
-                    if ((event.key() == QtCore.Qt.Key_Enter) or (event.key() == QtCore.Qt.Key_Return)):
+            if event.type() == QtCore.QEvent.Type.KeyPress:
+                if (event.modifiers() == QtCore.Qt.Modifier.SHIFT) or not self.cbxIsMultiline.isChecked():
+                    if ((event.key() == QtCore.Qt.Key.Key_Enter) or (event.key() == QtCore.Qt.Key.Key_Return)):
                         self.btnCheck_Clicked()
                         return True
-            if event.type() == QtCore.QEvent.FocusIn:
+            if event.type() == QtCore.QEvent.Type.FocusIn:
                 if not self.cbxIsMultiline.isChecked():
                     if len(self.txtWord2Check.toPlainText()) > 0: #If selectAll at empty box => cursor not appearing
                         # https://www.qtcentre.org/threads/31705-selectAll-in-QLineEdit-does-not-work?p=277477#post277477
@@ -141,4 +141,4 @@ def run() -> None:
     app = QtWidgets.QApplication(sys.argv)
     window = qt_gui()
     window.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
