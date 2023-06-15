@@ -1,11 +1,8 @@
 from selenium import webdriver
 from hanziconv import HanziConv
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.chrome.options import Options
 from typing import Tuple
 from .dict_result import DictResult
@@ -15,10 +12,9 @@ class HJEnglishWebDriverCore:
     def __init__(self) -> None:
         options = Options()
         options.headless = True
-        caps = DesiredCapabilities().CHROME
-        # caps["pageLoadStrategy"] = "normal"  #  Waits for full page load
-        caps["pageLoadStrategy"] = "none"   # Do not wait for full page load
-        self.driver = webdriver.Chrome(options=options, desired_capabilities=caps)
+        #options.page_load_strategy = "none" # Waits for full page load
+        options.page_load_strategy = "none" # Do not wait for full page load
+        self.driver = webdriver.Chrome(options=options)
         self.driver.get("https://dict.hjenglish.com/jp/")
         self.prevUrl = ""
         self.prevWord2Search = ""
