@@ -88,12 +88,12 @@ class qt_gui(QtWidgets.QMainWindow):
     def lstHistory_currentItemChanged(self, current: QtWidgets.QListWidgetItem, prev: QtWidgets.QListWidgetItem) -> None:
         word2Change: str = current.text()
         word2Check: str = self.txtWord2Check.toPlainText()
-        txtWordsCheck: List[str] = word2Check.split("\n")
+        words_2_check: List[str] = word2Check.split("\n")
 
         if self.cbxIsMultiline.isChecked():
-            if word2Change in txtWordsCheck:
-                txtWordsCheck.remove(word2Change)
-            self.txtWord2Check.setText(word2Change + "\n" + "\n".join(txtWordsCheck))
+            if word2Change in words_2_check:
+                words_2_check.remove(word2Change)
+            self.txtWord2Check.setText(word2Change + "\n" + "\n".join(words_2_check))
         else:
             self.txtWord2Check.setText(word2Change)
         
