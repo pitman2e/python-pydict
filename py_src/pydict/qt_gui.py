@@ -13,7 +13,7 @@ from .logger import logger
 
 UiFileDir: str = os.path.dirname(os.path.dirname(__file__))
 UriFilePath: str = os.path.join(UiFileDir, "pydict", "ui", "dict.ui")
-dict_result_hist = {}
+dict_result_hist: dict[str, DictResult] = {}
 
 
 class qt_gui(QtWidgets.QMainWindow):
@@ -96,6 +96,11 @@ class qt_gui(QtWidgets.QMainWindow):
             self.txtWord2Check.setText(word2Change + "\n" + "\n".join(txtWordsCheck))
         else:
             self.txtWord2Check.setText(word2Change)
+        
+        if word2Change in dict_result_hist:
+            self.txtResult.setText(dict_result_hist[word2Change].definition)
+            self.txtSuggestion.setText("")
+            self.txtWord.setText("")
 
     def closeEvent(self, event) -> None:
         if self.core is not None: 
@@ -137,6 +142,7 @@ class qt_gui(QtWidgets.QMainWindow):
                 self.txtWord.setText(result.word)
                 self.txtResult.setText(result.definition)
                 self.lblStatus.setText("")
+                dict_result_hist[result.word] = result
             else:
                 self.lblStatus.setText("Word definition not found")
                 
