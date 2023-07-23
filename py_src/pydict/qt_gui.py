@@ -13,6 +13,8 @@ from .logger import logger
 
 UiFileDir: str = os.path.dirname(os.path.dirname(__file__))
 UriFilePath: str = os.path.join(UiFileDir, "pydict", "ui", "dict.ui")
+dict_result_hist = {}
+
 
 class qt_gui(QtWidgets.QMainWindow):
     def __init__(self) -> None:
@@ -28,6 +30,8 @@ class qt_gui(QtWidgets.QMainWindow):
         self.btnCopyResult: QtWidgets.QPushButton
         self.txtWord2Check: QtWidgets.QTextEdit
         self.txtSuggestion: QtWidgets.QTextEdit
+        self.txtResult: QtWidgets.QTextEdit
+        self.txtWord: QtWidgets.QTextEdit
         self.lstHistory: QtWidgets.QListWidget
         self.lblStatus: QtWidgets.QLabel
         self.cbxIsMultiline: QtWidgets.QCheckBox
@@ -49,7 +53,7 @@ class qt_gui(QtWidgets.QMainWindow):
         self.cbbTranType.currentTextChanged.connect(self.cbbTranType_currentTextChanged)
         self.txtWord2Check.setFocus()
         
-        self.core = None
+        self.core: HJEnglishWebDriverCore = None
 
         logger.log("Program initialised")
 
@@ -122,8 +126,6 @@ class qt_gui(QtWidgets.QMainWindow):
         self.btnCheck.setDisabled(True)
 
         try:
-            result: DictResult
-            
             if self.cbbTranType.currentText() == "JP":
                 result = self.core.GetDictionaryResult(word2Search)
             elif self.cbbTranType.currentText() == "EN":

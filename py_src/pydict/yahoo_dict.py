@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from .dict_result import DictResult
 
-def Check_EN_ZH(word: str, recursiveDepth=0):
+def Check_EN_ZH(word: str, recursiveDepth=0) -> DictResult:
     result = DictResult(word=word)
 
     if (word.strip() == ""): 
