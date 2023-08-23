@@ -7,6 +7,7 @@ from selenium.webdriver.chrome.options import Options
 from typing import Tuple
 from .dict_result import DictResult
 from .logger import logger
+from selenium.webdriver.chrome.service import Service
 
 class HJEnglishWebDriverCore:
     def __init__(self) -> None:
@@ -14,7 +15,8 @@ class HJEnglishWebDriverCore:
         options.headless = True
         #options.page_load_strategy = "none" # Waits for full page load
         options.page_load_strategy = "none" # Do not wait for full page load
-        self.driver = webdriver.Chrome(options=options)
+        service = Service(executable_path='/usr/bin/chromedriver')
+        self.driver = webdriver.Chrome(options=options, service=service)
         self.driver.get("https://dict.hjenglish.com/jp/")
         self.prevUrl = ""
         self.prevWord2Search = ""
