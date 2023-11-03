@@ -12,9 +12,9 @@ from selenium.webdriver.chrome.service import Service
 class HJEnglishWebDriverCore:
     def __init__(self) -> None:
         options = Options()
-        options.headless = True
         #options.page_load_strategy = "none" # Waits for full page load
         options.page_load_strategy = "none" # Do not wait for full page load
+        options.add_argument("--headless")
         service = Service(executable_path='/usr/bin/chromedriver')
         self.driver = webdriver.Chrome(options=options, service=service)
         self.driver.get("https://dict.hjenglish.com/jp/")
