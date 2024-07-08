@@ -59,19 +59,6 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="btnRefreshCore">
-              <property name="maximumSize">
-               <size>
-                <width>30</width>
-                <height>16777215</height>
-               </size>
-              </property>
-              <property name="text">
-               <string>R</string>
-              </property>
-             </widget>
-            </item>
-            <item>
              <widget class="QComboBox" name="cbbTranType">
               <property name="maximumSize">
                <size>

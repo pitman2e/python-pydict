@@ -4,10 +4,9 @@ import pyperclip
 import traceback
 from typing import List
 
-from . import yahoo_dict
+from . import da_jp, yahoo_dict
 import os
 from PyQt6 import QtCore, QtWidgets, uic
-from .hjenglish_jp_core import HJEnglishWebDriverCore
 from .dict_result import DictResult
 from .logger import logger
 
@@ -36,11 +35,9 @@ class qt_gui(QtWidgets.QMainWindow):
         self.lblStatus: QtWidgets.QLabel
         self.cbxIsMultiline: QtWidgets.QCheckBox
         self.lstLog: QtWidgets.QListWidget
-        self.btnRefreshCore: QtWidgets.QPushButton
 
         self.btnCheck.clicked.connect(self.btnCheck_Clicked)
         self.btnCheckNext.clicked.connect(self.btnCheckNext_Clicked)
-        self.btnRefreshCore.clicked.connect(self.btnRefreshCore_Clicked)
         self.lstHistory.currentItemChanged.connect(self.lstHistory_currentItemChanged)
 
         self.cbbTranType.addItem("EN")
@@ -53,8 +50,6 @@ class qt_gui(QtWidgets.QMainWindow):
         self.cbbTranType.currentTextChanged.connect(self.cbbTranType_currentTextChanged)
         self.txtWord2Check.setFocus()
         
-        self.core: HJEnglishWebDriverCore = None
-
         logger.log("Program initialised")
 
     def eventFilter(self, source: QtCore.QObject, event: QtCore.QEvent) -> None:
@@ -75,14 +70,7 @@ class qt_gui(QtWidgets.QMainWindow):
         return False
 
     def cbbTranType_currentTextChanged(self) -> None:
-        if self.cbbTranType.currentText() == "JP":
-            if self.core == None:
-                self.core = HJEnglishWebDriverCore()
-                logger.log("Init HJ English Core")
-        else:
-            self.core.close()
-            self.core = None
-            logger.log("Close HJ English Core")
+        pass
 
     
     def lstHistory_currentItemChanged(self, current: QtWidgets.QListWidgetItem, prev: QtWidgets.QListWidgetItem) -> None:
@@ -103,8 +91,7 @@ class qt_gui(QtWidgets.QMainWindow):
             self.txtWord.setText("")
 
     def closeEvent(self, event) -> None:
-        if self.core is not None: 
-            self.core.close()
+        pass
 
     def btnCheck_Clicked(self) -> None:
         newItem = QtWidgets.QListWidgetItem()
@@ -121,18 +108,12 @@ class qt_gui(QtWidgets.QMainWindow):
         else:
             self.getDictionaryResult(words[0])
 
-    def btnRefreshCore_Clicked(self) -> None:
-        if self.cbbTranType.currentText() == "JP":
-            self.core.close()
-            self.core = HJEnglishWebDriverCore()
-            logger.log("Refreshed HJ English Core")
-
     def getDictionaryResult(self, word2Search: str) -> None:
         self.btnCheck.setDisabled(True)
 
         try:
             if self.cbbTranType.currentText() == "JP":
-                result = self.core.GetDictionaryResult(word2Search)
+                result = da_jp.GetDictionaryResult(word2Search)
             elif self.cbbTranType.currentText() == "EN":
                 result = yahoo_dict.Check_EN_ZH(word2Search)
             else:

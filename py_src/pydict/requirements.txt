@@ -1,6 +1,5 @@
 PyQt6
 beautifulsoup4
-selenium
 pyperclip
 requests
 hanziconv
