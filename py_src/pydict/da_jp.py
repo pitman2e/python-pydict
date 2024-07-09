@@ -74,17 +74,17 @@ def GetDictionaryResult(word2Search: str) -> DictResult:
                         #Example text: 1. xx；xx；xx。「(xxx)xxxxxxxxxxxxxxxxxxx｡」
                         txt_splited = txt.split("「")
                         txt_splited[0] = HanziConv.toTraditional(txt_splited[0])
-                        recombined_txt = "".join(txt_splited)
+                        recombined_txt = "「".join(txt_splited)
                         results.append(recombined_txt)
                     elif txt.startswith("["):
                         #Example text: [名]
                         #Example text: [惯用语]
                         results.append(HanziConv.toTraditional(txt))
-                    elif "。" in txt:
-                        #Example text: 1.x，x。（xxxxxxxxxxxx。）
-                        txt_splited = txt.split("。")
+                    elif "（" in txt: 
+                        #Example text: xxxxx，xxxx（xxxxxxxx）
+                        txt_splited = txt.split("（")
                         txt_splited[0] = HanziConv.toTraditional(txt_splited[0])
-                        recombined_txt = "".join(txt_splited)
+                        recombined_txt = "（".join(txt_splited)
                         results.append(recombined_txt)
                     else:
                         results.append(txt)
