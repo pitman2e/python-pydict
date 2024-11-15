@@ -43,7 +43,7 @@ def GetDictionaryResult(word2Search: str) -> DictResult:
     suburl2 = "asia"
     url = f"https://www.{suburl1}.{suburl2}/jc/{word2Search}"
 
-    response = requests.get(url)
+    response = requests.get(url=url, verify=False)
     response.encoding = "utf-8"
     htmltext = response.text
 
