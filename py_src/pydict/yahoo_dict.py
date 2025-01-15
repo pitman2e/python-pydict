@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-from .dict_result import DictResult
+from pydict.dict_result import DictResult
 
 def check_en_zh(word: str, recursive_depth=0) -> DictResult:
     result = DictResult(word=word)

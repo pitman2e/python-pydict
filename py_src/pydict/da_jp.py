@@ -1,5 +1,5 @@
 from hanziconv import HanziConv
-from .dict_result import DictResult
+from pydict.dict_result import DictResult
 from bs4 import BeautifulSoup
 import requests
 

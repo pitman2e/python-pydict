@@ -6,8 +6,8 @@ from typing import List
 from pydict import da_jp, yahoo_dict
 import os
 from PyQt6 import QtCore, QtWidgets, uic
-from .dict_result import DictResult
-from .logger import Logger
+from pydict.dict_result import DictResult
+from pydict.logger import Logger
 
 UiFileDir: str = os.path.dirname(os.path.dirname(__file__))
 UriFilePath: str = os.path.join(UiFileDir, "pydict", "ui", "dict.ui")
