@@ -56,7 +56,8 @@ class QtGui(QtWidgets.QMainWindow):
         
         Logger.log("Program initialised")
 
-    def event_filter(self, source: QtCore.QObject, event: QtCore.QEvent) -> bool:
+    # Do not modify function name, meant to override
+    def eventFilter(self, source: QtCore.QObject, event: QtCore.QEvent) -> bool:
         if source is self.txtWord2Check:
             if event.type() == QtCore.QEvent.Type.KeyPress:
                 if (event.modifiers() == QtCore.Qt.Modifier.SHIFT) or not self.cbxIsMultiline.isChecked():
@@ -94,7 +95,8 @@ class QtGui(QtWidgets.QMainWindow):
             self.txtSuggestion.setText("")
             self.txtWord.setText("")
 
-    def close_event(self, event) -> None:
+    # Do not modify function name, meant to override
+    def closeEvent(self, event) -> None:
         pass
 
     def btnCheck_Clicked(self) -> None:
