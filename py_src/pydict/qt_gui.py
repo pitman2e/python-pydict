@@ -151,7 +151,7 @@ class QtGui(QtWidgets.QMainWindow):
     def apply_ui_dict_result(self, result: DictResult):
         if result.is_success:
             self.txtWord.setText(result.word)
-            if not self.is_raw_result:
+            if self.is_raw_result:
                 self.txtResult.setText(result.definition)
             else:
                 self.txtResult.setText(result.definition_tc)
