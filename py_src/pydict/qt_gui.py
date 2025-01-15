@@ -99,9 +99,14 @@ class QtGui(QtWidgets.QMainWindow):
 
     def btnCheck_Clicked(self) -> None:
         new_item = QtWidgets.QListWidgetItem()
-        new_item.setText(self.txtWord2Check.toPlainText())
-        self.lstHistory.insertItem(0, new_item)
-        self.getDictionaryResult(self.txtWord2Check.toPlainText())
+        new_item_text = self.txtWord2Check.toPlainText()
+        new_item.setText(new_item_text)
+
+        if new_item_text not in dict_result_hist:
+            self.lstHistory.insertItem(0, new_item)
+            self.getDictionaryResult(self.txtWord2Check.toPlainText())
+        else:
+            self.apply_ui_dict_result(dict_result_hist[new_item_text])
 
     def btnCheckNext_Clicked(self) -> None:
         words = self.txtWord2Check.toPlainText().split("\n")
