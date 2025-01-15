@@ -108,6 +108,7 @@ class QtGui(QtWidgets.QMainWindow):
             self.lstHistory.insertItem(0, new_item)
             self.getDictionaryResult(self.txtWord2Check.toPlainText())
         else:
+            self.is_raw_result = True
             self.apply_ui_dict_result(dict_result_hist[new_item_text])
 
     def btnCheckNext_Clicked(self) -> None:
