@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 import requests
 
 def replace_words(txt: str) -> str:
-    word2Replaces = [
+    word2replaces = [
         ("【" , "["),
         ("】" , "]"),
         ("❶" , "1."),
@@ -27,21 +27,21 @@ def replace_words(txt: str) -> str:
         ("（9）", "9."),
     ]
 
-    for word2Replace in word2Replaces:
+    for word2Replace in word2replaces:
         txt = txt.replace(word2Replace[0], word2Replace[1])
 
     return txt
 
-def GetDictionaryResult(word2Search: str) -> DictResult:
-    if (word2Search.strip() == ""):
+def get_dictionary_result(word2search: str) -> DictResult:
+    if word2search.strip() == "":
         return DictResult()
 
-    if (not word2Search):
+    if not word2search:
         return DictResult()
 
     suburl1 = "dict"
     suburl2 = "asia"
-    url = f"https://www.{suburl1}.{suburl2}/jc/{word2Search}"
+    url = f"https://www.{suburl1}.{suburl2}/jc/{word2search}"
 
     response = requests.get(url=url, verify=False)
     response.encoding = "utf-8"
@@ -53,19 +53,18 @@ def GetDictionaryResult(word2Search: str) -> DictResult:
 
     results = []
 
-    resultStr = ""
     if tabs:
         for tab in tabs[:1]:
             results.append(replace_words(tab.select_one(".jpword").text))
             results.append(replace_words(tab.select_one(".mt10").text.replace("\n", "")).replace("]", "] "))
 
-            eles_commentItem = tab.select(".jp_explain > .commentItem")
+            eles_comment_item = tab.select(".jp_explain > .commentItem")
 
-            for ele in eles_commentItem:
+            for ele in eles_comment_item:
                 for e in ele.select(".liju"):
                     e.decompose()
                 
-            for ele in eles_commentItem:
+            for ele in eles_comment_item:
                 ele_text = ele.get_text(separator = '\n', strip = True) #<br> is converted to \n
                 ele_text = replace_words(ele_text)
                 
@@ -91,7 +90,7 @@ def GetDictionaryResult(word2Search: str) -> DictResult:
 
         resultStr = "\n".join(results)
 
-        return DictResult(suggestion="", is_success=True, definition=resultStr, word=word2Search)
+        return DictResult(suggestion="", is_success=True, definition=resultStr, word=word2search)
     else:
         return DictResult()
     

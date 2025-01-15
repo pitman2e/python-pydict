@@ -1,26 +1,25 @@
 import sys
-import os
 import pyperclip
 import traceback
 from typing import List
 
-from . import da_jp, yahoo_dict
+from pydict import da_jp, yahoo_dict
 import os
 from PyQt6 import QtCore, QtWidgets, uic
 from .dict_result import DictResult
-from .logger import logger
+from .logger import Logger
 
 UiFileDir: str = os.path.dirname(os.path.dirname(__file__))
 UriFilePath: str = os.path.join(UiFileDir, "pydict", "ui", "dict.ui")
 dict_result_hist: dict[str, DictResult] = {}
 
 
-class qt_gui(QtWidgets.QMainWindow):
+class QtGui(QtWidgets.QMainWindow):
     def __init__(self) -> None:
-        super(qt_gui, self).__init__()
+        super(QtGui, self).__init__()
         uic.loadUi(UriFilePath, self)
 
-        logger.set_log_widget(self.lstLog)
+        Logger.set_log_widget(self.lstLog)
 
         self.cbbTranType: QtWidgets.QComboBox
         self.btnCheckNext: QtWidgets.QPushButton
@@ -50,7 +49,7 @@ class qt_gui(QtWidgets.QMainWindow):
         self.cbbTranType.currentTextChanged.connect(self.cbbTranType_currentTextChanged)
         self.txtWord2Check.setFocus()
         
-        logger.log("Program initialised")
+        Logger.log("Program initialised")
 
     def eventFilter(self, source: QtCore.QObject, event: QtCore.QEvent) -> None:
         if source is self.txtWord2Check:
@@ -113,9 +112,9 @@ class qt_gui(QtWidgets.QMainWindow):
 
         try:
             if self.cbbTranType.currentText() == "JP":
-                result = da_jp.GetDictionaryResult(word2Search)
+                result = da_jp.get_dictionary_result(word2Search)
             elif self.cbbTranType.currentText() == "EN":
-                result = yahoo_dict.Check_EN_ZH(word2Search)
+                result = yahoo_dict.check_en_zh(word2Search)
             else:
                 raise Exception("Unrecognised Dictionary Type")
                 
@@ -136,6 +135,6 @@ class qt_gui(QtWidgets.QMainWindow):
 
 def run() -> None:
     app = QtWidgets.QApplication(sys.argv)
-    window = qt_gui()
+    window = QtGui()
     window.show()
     sys.exit(app.exec())
