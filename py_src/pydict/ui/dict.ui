@@ -166,6 +166,13 @@
              </widget>
             </item>
             <item>
+             <widget class="QPushButton" name="btnToggleRaw">
+              <property name="text">
+               <string>Toggle Raw</string>
+              </property>
+             </widget>
+            </item>
+            <item>
              <widget class="QPushButton" name="btnCheckNext">
               <property name="text">
                <string>Check Next</string>

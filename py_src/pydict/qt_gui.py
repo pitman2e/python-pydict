@@ -21,6 +21,9 @@ class QtGui(QtWidgets.QMainWindow):
 
         Logger.set_log_widget(self.lstLog)
 
+        self.is_raw_result = True
+        self.dict_result: DictResult = None
+
         self.cbbTranType: QtWidgets.QComboBox
         self.btnCheckNext: QtWidgets.QPushButton
         self.btnCheck: QtWidgets.QPushButton
@@ -34,9 +37,11 @@ class QtGui(QtWidgets.QMainWindow):
         self.lblStatus: QtWidgets.QLabel
         self.cbxIsMultiline: QtWidgets.QCheckBox
         self.lstLog: QtWidgets.QListWidget
+        self.btnToggleRaw: QtWidgets.QPushButton
 
         self.btnCheck.clicked.connect(self.btnCheck_Clicked)
         self.btnCheckNext.clicked.connect(self.btnCheckNext_Clicked)
+        self.btnToggleRaw.clicked.connect(self.btn_toggle_raw_clicked)
         self.lstHistory.currentItemChanged.connect(self.lstHistory_currentItemChanged)
 
         self.cbbTranType.addItem("EN")
@@ -51,11 +56,11 @@ class QtGui(QtWidgets.QMainWindow):
         
         Logger.log("Program initialised")
 
-    def eventFilter(self, source: QtCore.QObject, event: QtCore.QEvent) -> None:
+    def event_filter(self, source: QtCore.QObject, event: QtCore.QEvent) -> bool:
         if source is self.txtWord2Check:
             if event.type() == QtCore.QEvent.Type.KeyPress:
                 if (event.modifiers() == QtCore.Qt.Modifier.SHIFT) or not self.cbxIsMultiline.isChecked():
-                    if ((event.key() == QtCore.Qt.Key.Key_Enter) or (event.key() == QtCore.Qt.Key.Key_Return)):
+                    if (event.key() == QtCore.Qt.Key.Key_Enter) or (event.key() == QtCore.Qt.Key.Key_Return):
                         self.btnCheck_Clicked()
                         return True
             if event.type() == QtCore.QEvent.Type.FocusIn:
@@ -89,15 +94,15 @@ class QtGui(QtWidgets.QMainWindow):
             self.txtSuggestion.setText("")
             self.txtWord.setText("")
 
-    def closeEvent(self, event) -> None:
+    def close_event(self, event) -> None:
         pass
 
     def btnCheck_Clicked(self) -> None:
-        newItem = QtWidgets.QListWidgetItem()
-        newItem.setText(self.txtWord2Check.toPlainText())
-        self.lstHistory.insertItem(0, newItem)
+        new_item = QtWidgets.QListWidgetItem()
+        new_item.setText(self.txtWord2Check.toPlainText())
+        self.lstHistory.insertItem(0, new_item)
         self.getDictionaryResult(self.txtWord2Check.toPlainText())
-    
+
     def btnCheckNext_Clicked(self) -> None:
         words = self.txtWord2Check.toPlainText().split("\n")
         if self.txtWord.text() == words[0]:
@@ -107,31 +112,48 @@ class QtGui(QtWidgets.QMainWindow):
         else:
             self.getDictionaryResult(words[0])
 
-    def getDictionaryResult(self, word2Search: str) -> None:
+    def btn_toggle_raw_clicked(self) -> None:
+        self.is_raw_result = not self.is_raw_result
+        self.apply_ui_dict_result(self.dict_result)
+
+
+    def getDictionaryResult(self, word2search: str) -> None:
         self.btnCheck.setDisabled(True)
 
         try:
+
             if self.cbbTranType.currentText() == "JP":
-                result = da_jp.get_dictionary_result(word2Search)
+                result = da_jp.get_dictionary_result(word2search)
             elif self.cbbTranType.currentText() == "EN":
-                result = yahoo_dict.check_en_zh(word2Search)
+                result = yahoo_dict.check_en_zh(word2search)
             else:
                 raise Exception("Unrecognised Dictionary Type")
-                
-            if (result.is_success):
-                self.txtWord.setText(result.word)
-                self.txtResult.setText(result.definition)
-                self.lblStatus.setText("")
-                dict_result_hist[result.word] = result
-            else:
-                self.lblStatus.setText("Word definition not found")
-                
-            self.txtSuggestion.setText(result.suggestion)
+
+            if result.is_success:
+                self.is_raw_result = True
+
+            self.apply_ui_dict_result(result)
+            dict_result_hist[result.word] = result
+            self.dict_result = result
 
         except Exception:
             self.txtResult.setText("An error has occured: \n" + traceback.format_exc())
         finally:
             self.btnCheck.setDisabled(False)
+
+    def apply_ui_dict_result(self, result: DictResult):
+        if result.is_success:
+            self.txtWord.setText(result.word)
+            if not self.is_raw_result:
+                self.txtResult.setText(result.definition)
+            else:
+                self.txtResult.setText(result.definition_tc)
+
+            self.lblStatus.setText("")
+        else:
+            self.lblStatus.setText("Word definition not found")
+
+        self.txtSuggestion.setText(result.suggestion)
 
 def run() -> None:
     app = QtWidgets.QApplication(sys.argv)
