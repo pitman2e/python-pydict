@@ -2,6 +2,7 @@
 Name=PyDict
 Comment=A Dictionary Scalper
 Exec=pydict
+Icon=search
 Categories=Education;Languages;
 Terminal=false
 Type=Application
