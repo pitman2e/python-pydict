@@ -75,7 +75,10 @@ class QtGui(QtWidgets.QMainWindow):
         return False
 
     def cbbTranType_currentTextChanged(self) -> None:
-        pass
+        dict_result_hist.clear()
+        self.lstHistory.currentItemChanged.disconnect(self.lstHistory_currentItemChanged)
+        self.lstHistory.clear()
+        self.lstHistory.currentItemChanged.connect(self.lstHistory_currentItemChanged)
 
     
     def lstHistory_currentItemChanged(self, current: QtWidgets.QListWidgetItem, prev: QtWidgets.QListWidgetItem) -> None:
