@@ -39,10 +39,10 @@ class QtGui(QtWidgets.QMainWindow):
         self.lstLog: QtWidgets.QListWidget
         self.btnToggleRaw: QtWidgets.QPushButton
 
-        self.btnCheck.clicked.connect(self.btnCheck_Clicked)
-        self.btnCheckNext.clicked.connect(self.btnCheckNext_Clicked)
+        self.btnCheck.clicked.connect(self.btn_check_clicked)
+        self.btnCheckNext.clicked.connect(self.btn_check_next_clicked)
         self.btnToggleRaw.clicked.connect(self.btn_toggle_raw_clicked)
-        self.lstHistory.currentItemChanged.connect(self.lstHistory_currentItemChanged)
+        self.lstHistory.currentItemChanged.connect(self.lst_history_current_item_changed)
 
         self.cbbTranType.addItem("EN")
         self.cbbTranType.addItem("JP")
@@ -51,7 +51,7 @@ class QtGui(QtWidgets.QMainWindow):
         self.btnCopyWord.clicked.connect(lambda : pyperclip.copy(self.txtWord.text()))
         #self.txtResult.installEventFilter(self) # No longer needed since copy function exists, keep for ref
         self.txtWord2Check.installEventFilter(self)
-        self.cbbTranType.currentTextChanged.connect(self.cbbTranType_currentTextChanged)
+        self.cbbTranType.currentTextChanged.connect(self.cbb_tran_type_current_text_changed)
         self.txtWord2Check.setFocus()
         
         Logger.log("Program initialised")
@@ -62,7 +62,7 @@ class QtGui(QtWidgets.QMainWindow):
             if event.type() == QtCore.QEvent.Type.KeyPress:
                 if (event.modifiers() == QtCore.Qt.Modifier.SHIFT) or not self.cbxIsMultiline.isChecked():
                     if (event.key() == QtCore.Qt.Key.Key_Enter) or (event.key() == QtCore.Qt.Key.Key_Return):
-                        self.btnCheck_Clicked()
+                        self.btn_check_clicked()
                         return True
             if event.type() == QtCore.QEvent.Type.FocusIn:
                 if not self.cbxIsMultiline.isChecked():
@@ -74,27 +74,27 @@ class QtGui(QtWidgets.QMainWindow):
                     
         return False
 
-    def cbbTranType_currentTextChanged(self) -> None:
+    def cbb_tran_type_current_text_changed(self) -> None:
         dict_result_hist.clear()
-        self.lstHistory.currentItemChanged.disconnect(self.lstHistory_currentItemChanged)
+        self.lstHistory.currentItemChanged.disconnect(self.lst_history_current_item_changed)
         self.lstHistory.clear()
-        self.lstHistory.currentItemChanged.connect(self.lstHistory_currentItemChanged)
+        self.lstHistory.currentItemChanged.connect(self.lst_history_current_item_changed)
 
     
-    def lstHistory_currentItemChanged(self, current: QtWidgets.QListWidgetItem, prev: QtWidgets.QListWidgetItem) -> None:
-        word2Change: str = current.text()
-        word2Check: str = self.txtWord2Check.toPlainText()
-        words_2_check: List[str] = word2Check.split("\n")
+    def lst_history_current_item_changed(self, current: QtWidgets.QListWidgetItem, prev: QtWidgets.QListWidgetItem) -> None:
+        word_to_change: str = current.text()
+        word_to_check: str = self.txtWord2Check.toPlainText()
+        words_2_check: List[str] = word_to_check.split("\n")
 
         if self.cbxIsMultiline.isChecked():
-            if word2Change in words_2_check:
-                words_2_check.remove(word2Change)
-            self.txtWord2Check.setText(word2Change + "\n" + "\n".join(words_2_check))
+            if word_to_change in words_2_check:
+                words_2_check.remove(word_to_change)
+            self.txtWord2Check.setText(word_to_change + "\n" + "\n".join(words_2_check))
         else:
-            self.txtWord2Check.setText(word2Change)
+            self.txtWord2Check.setText(word_to_change)
         
-        if word2Change in dict_result_hist:
-            self.txtResult.setText(dict_result_hist[word2Change].definition)
+        if word_to_change in dict_result_hist:
+            self.txtResult.setText(dict_result_hist[word_to_change].definition)
             self.txtSuggestion.setText("")
             self.txtWord.setText("")
 
@@ -102,33 +102,33 @@ class QtGui(QtWidgets.QMainWindow):
     def closeEvent(self, event) -> None:
         pass
 
-    def btnCheck_Clicked(self) -> None:
+    def btn_check_clicked(self) -> None:
         new_item = QtWidgets.QListWidgetItem()
         new_item_text = self.txtWord2Check.toPlainText()
         new_item.setText(new_item_text)
 
         if new_item_text not in dict_result_hist:
             self.lstHistory.insertItem(0, new_item)
-            self.getDictionaryResult(self.txtWord2Check.toPlainText())
+            self.get_dictionary_result(self.txtWord2Check.toPlainText())
         else:
             self.is_raw_result = True
             self.apply_ui_dict_result(dict_result_hist[new_item_text])
 
-    def btnCheckNext_Clicked(self) -> None:
+    def btn_check_next_clicked(self) -> None:
         words = self.txtWord2Check.toPlainText().split("\n")
         if self.txtWord.text() == words[0]:
             if len(words) > 1:
                 self.txtWord2Check.setText("\n".join(words[1:]))
-                self.getDictionaryResult(words[1])
+                self.get_dictionary_result(words[1])
         else:
-            self.getDictionaryResult(words[0])
+            self.get_dictionary_result(words[0])
 
     def btn_toggle_raw_clicked(self) -> None:
         self.is_raw_result = not self.is_raw_result
         self.apply_ui_dict_result(self.dict_result)
 
 
-    def getDictionaryResult(self, word2search: str) -> None:
+    def get_dictionary_result(self, word2search: str) -> None:
         self.btnCheck.setDisabled(True)
 
         try:
