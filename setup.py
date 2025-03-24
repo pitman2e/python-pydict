@@ -21,7 +21,7 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     packages=['pydict'],
-    package_dir={"pydict": "py_src/pydict"},
+    package_dir={"pydict": "pydict"},
     package_data={'pydict': ['ui/dict.ui']},
     python_requires=">=3.8",
     install_requires=['hanziconv', 'PyQt6', 'pyperclip', 'requests', 'bs4'],
