@@ -37,10 +37,12 @@ def check_en_zh(word: str, recursive_depth=0) -> DictResult:
                     return check_en_zh(definition_text[0:definition_text.index("的")], recursive_depth + 1)
 
         result.definition = "\n".join(definitions)
+        result.definition_raw = result.definition
         result.suggestion = ""
     else:
         result.is_success = False
         result.definition = ""
+        result.definition_raw = result.definition
         if len(suggestion_ele) > 0:
             result.suggestion = suggestion_ele[0].text.strip().replace("你是不是要查 ", "")
         else:

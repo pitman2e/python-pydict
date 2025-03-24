@@ -52,11 +52,17 @@ def get_dictionary_result(word2search: str) -> DictResult:
     tabs = doc.select("#jp_comment")        
 
     results = []
+    results_raw = []
 
     if tabs:
         for tab in tabs[:1]:
-            results.append(replace_words(tab.select_one(".jpword").text))
-            results.append(replace_words(tab.select_one(".mt10").text.replace("\n", "")).replace("]", "] "))
+            tmp_txt = replace_words(tab.select_one(".jpword").text)
+            results.append(tmp_txt)
+            results_raw.append(tmp_txt)
+
+            tmp_txt = replace_words(tab.select_one(".mt10").text.replace("\n", "")).replace("]", "] ")
+            results.append(tmp_txt)
+            results_raw.append(tmp_txt)
 
             eles_comment_item = tab.select(".jp_explain > .commentItem")
 
@@ -69,6 +75,8 @@ def get_dictionary_result(word2search: str) -> DictResult:
                 ele_text = replace_words(ele_text)
                 
                 for txt in ele_text.split("\n"):
+                    results_raw.append(txt)
+
                     if "「" in txt:
                         #Example text: 1. xx；xx；xx。「(xxx)xxxxxxxxxxxxxxxxxxx｡」
                         txt_splited = txt.split("「")
@@ -89,8 +97,9 @@ def get_dictionary_result(word2search: str) -> DictResult:
                         results.append(txt)
 
         resultStr = "\n".join(results)
+        result_str_raw = "\n".join(results_raw)
 
-        return DictResult(suggestion="", is_success=True, definition=resultStr, word=word2search)
+        return DictResult(suggestion="", is_success=True, definition=resultStr, definition_raw=result_str_raw, word=word2search)
     else:
         return DictResult()
 

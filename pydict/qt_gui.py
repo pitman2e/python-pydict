@@ -8,11 +8,16 @@ import os
 from PyQt6 import QtCore, QtWidgets, uic
 from pydict.dict_result import DictResult
 from pydict.logger import Logger
+from enum import Enum
 
 UiFileDir: str = os.path.dirname(os.path.dirname(__file__))
 UriFilePath: str = os.path.join(UiFileDir, "pydict", "ui", "dict.ui")
 dict_result_hist: dict[str, DictResult] = {}
 
+class DefinitionViewMode(Enum):
+    DEFAULT = 0
+    TC = 1
+    RAW = 2
 
 class QtGui(QtWidgets.QMainWindow):
     def __init__(self) -> None:
@@ -21,7 +26,7 @@ class QtGui(QtWidgets.QMainWindow):
 
         Logger.set_log_widget(self.lstLog)
 
-        self.is_raw_result = True
+        self.definition_view_mode = DefinitionViewMode.DEFAULT
         self.dict_result: DictResult = None
 
         self.cbbTranType: QtWidgets.QComboBox
@@ -111,7 +116,7 @@ class QtGui(QtWidgets.QMainWindow):
             self.lstHistory.insertItem(0, new_item)
             self.get_dictionary_result(self.txtWord2Check.toPlainText())
         else:
-            self.is_raw_result = True
+            self.definition_view_mode = DefinitionViewMode.DEFAULT
             self.apply_ui_dict_result(dict_result_hist[new_item_text])
 
     def btn_check_next_clicked(self) -> None:
@@ -124,7 +129,7 @@ class QtGui(QtWidgets.QMainWindow):
             self.get_dictionary_result(words[0])
 
     def btn_toggle_raw_clicked(self) -> None:
-        self.is_raw_result = not self.is_raw_result
+        self.definition_view_mode = DefinitionViewMode((self.definition_view_mode.value + 1) % len(DefinitionViewMode))
         self.apply_ui_dict_result(self.dict_result)
 
 
@@ -141,7 +146,7 @@ class QtGui(QtWidgets.QMainWindow):
                 raise Exception("Unrecognised Dictionary Type")
 
             if result.is_success:
-                self.is_raw_result = True
+                self.definition_view_mode = DefinitionViewMode.DEFAULT
 
             self.apply_ui_dict_result(result)
             dict_result_hist[result.word] = result
@@ -155,10 +160,15 @@ class QtGui(QtWidgets.QMainWindow):
     def apply_ui_dict_result(self, result: DictResult):
         if result.is_success:
             self.txtWord.setText(result.word)
-            if self.is_raw_result:
+            if self.definition_view_mode == DefinitionViewMode.DEFAULT:
                 self.txtResult.setText(result.definition)
-            else:
+                self.btnToggleRaw.setText("Toggle Raw(DF)")
+            elif self.definition_view_mode == DefinitionViewMode.TC:
                 self.txtResult.setText(result.definition_tc)
+                self.btnToggleRaw.setText("Toggle Raw(TC)")
+            elif self.definition_view_mode == DefinitionViewMode.RAW:
+                self.txtResult.setText(result.definition_raw)
+                self.btnToggleRaw.setText("Toggle Raw(RW)")
 
             self.lblStatus.setText("")
         else:
