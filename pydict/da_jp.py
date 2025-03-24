@@ -72,17 +72,17 @@ def get_dictionary_result(word2search: str) -> DictResult:
                     if "「" in txt:
                         #Example text: 1. xx；xx；xx。「(xxx)xxxxxxxxxxxxxxxxxxx｡」
                         txt_splited = txt.split("「")
-                        txt_splited[0] = HanziConv.toTraditional(txt_splited[0])
+                        txt_splited[0] = to_traditional(txt_splited[0])
                         recombined_txt = "「".join(txt_splited)
                         results.append(recombined_txt)
                     elif txt.startswith("["):
                         #Example text: [名]
                         #Example text: [惯用语]
-                        results.append(HanziConv.toTraditional(txt))
+                        results.append(to_traditional(txt))
                     elif "（" in txt: 
                         #Example text: xxxxx，xxxx（xxxxxxxx）
                         txt_splited = txt.split("（")
-                        txt_splited[0] = HanziConv.toTraditional(txt_splited[0])
+                        txt_splited[0] = to_traditional(txt_splited[0])
                         recombined_txt = "（".join(txt_splited)
                         results.append(recombined_txt)
                     else:
@@ -93,4 +93,78 @@ def get_dictionary_result(word2search: str) -> DictResult:
         return DictResult(suggestion="", is_success=True, definition=resultStr, word=word2search)
     else:
         return DictResult()
-    
+
+def to_traditional(txt: str) -> str:
+    seps = "〉〈()。・（）［］、,./\\〔〕·,.|-+!~\n\t《》[]:：\"'；"
+
+    hiragana_katakana = [
+        ["あ", "い", "う", "え", "お"],
+        ["か", "き", "く", "け", "こ"],
+        ["さ", "し", "す", "せ", "そ"],
+        ["た", "ち", "つ", "て", "と"],
+        ["な", "に", "ぬ", "ね", "の"],
+        ["は", "ひ", "ふ", "へ", "ほ"],
+        ["ま", "み", "む", "め", "も"],
+        ["や", "ゆ", "よ"],
+        ["ら", "り", "る", "れ", "ろ"],
+        ["わ", "を"],
+        ["ん"],
+        ["が", "ぎ", "ぐ", "げ", "ご"],
+        ["ざ", "じ", "ず", "ぜ", "ぞ"],
+        ["だ", "ぢ", "づ", "で", "ど"],
+        ["ば", "び", "ぶ", "べ", "ぼ"],
+        ["ぱ", "ぴ", "ぷ", "ぺ", "ぽ"],
+        ["ア", "イ", "ウ", "エ", "オ"],
+        ["カ", "キ", "ク", "ケ", "コ"],
+        ["サ", "シ", "ス", "セ", "ソ"],
+        ["タ", "チ", "ツ", "テ", "ト"],
+        ["ナ", "ニ", "ヌ", "ネ", "ノ"],
+        ["ハ", "ヒ", "フ", "ヘ", "ホ"],
+        ["マ", "ミ", "ム", "メ", "モ"],
+        ["ヤ", "ユ", "ヨ"],
+        ["ラ", "リ", "ル", "レ", "ロ"],
+        ["ワ", "ヲ"],
+        ["ン"],
+        ["ガ", "ギ", "グ", "ゲ", "ゴ"],
+        ["ザ", "ジ", "ズ", "ゼ", "ゾ"],
+        ["ダ", "ヂ", "ヅ", "デ", "ド"],
+        ["バ", "ビ", "ブ", "ベ", "ボ"],
+        ["パ", "ピ", "プ", "ペ", "ポ"]
+    ]
+
+    tr_buffer = ""
+    buffer = ""
+    is_jp = False
+    for c in txt:
+        if c in hiragana_katakana:
+            is_jp = True
+
+        buffer = buffer + c
+        if c in seps:
+            tr_buffer = tr_buffer + (buffer if is_jp else to_traditional_cond(buffer))
+            buffer = ""
+            is_jp = False
+
+    rtv = tr_buffer + (buffer if is_jp else to_traditional_cond(buffer))
+    return rtv
+
+def to_traditional_cond(txt: str) -> str:
+    rtv = ""
+    # The dictionary's value has no usage, just for reference
+    excluded_c = {
+        "出", "齣",
+        "面", "麵",
+        "表", "錶",
+        "曲", "麯",
+        "回", "迴",
+        "借", "藉",
+        "向", "嚮",
+    }
+
+    for c in txt:
+        if c in excluded_c:
+            rtv = rtv + c
+        else:
+            rtv = rtv + HanziConv.toTraditional(c)
+
+    return rtv
