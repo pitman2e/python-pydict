@@ -77,23 +77,26 @@ def get_dictionary_result(word2search: str) -> DictResult:
                 for txt in ele_text.split("\n"):
                     results_raw.append(txt)
 
-                    if "「" in txt:
-                        #Example text: 1. xx；xx；xx。「(xxx)xxxxxxxxxxxxxxxxxxx｡」
-                        txt_splited = txt.split("「")
-                        txt_splited[0] = to_traditional(txt_splited[0])
-                        recombined_txt = "「".join(txt_splited)
-                        results.append(recombined_txt)
-                    elif txt.startswith("["):
+                    if txt.startswith("["):
                         #Example text: [名]
                         #Example text: [惯用语]
                         results.append(to_traditional(txt))
-                    elif "（" in txt: 
-                        #Example text: xxxxx，xxxx（xxxxxxxx）
-                        txt_splited = txt.split("（")
-                        txt_splited[0] = to_traditional(txt_splited[0])
-                        recombined_txt = "（".join(txt_splited)
-                        results.append(recombined_txt)
-                    else:
+                        continue
+
+                    is_processed = False
+                    for i in range(len(txt)):
+                        c = txt[i]
+                        if c in "「（〔":
+                            # Example text: 1. xx；xx；xx。「(xxx)xxxxxxxxxxxxxxxxxxx｡」
+                            # Example text: 2 xxxxx，xxxx（xxxxxxxx）
+                            txt_splited = txt.split(c)
+                            txt_splited[0] = to_traditional(txt_splited[0])
+                            recombined_txt = c.join(txt_splited)
+                            results.append(recombined_txt)
+                            is_processed = True
+                            break
+
+                    if not is_processed:
                         results.append(txt)
 
         resultStr = "\n".join(results)
