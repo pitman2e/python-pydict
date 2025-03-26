@@ -1,7 +1,7 @@
 # Maintainer: pitman2e
 pkgname=pydict
-pkgver=0.10.0
-pkgrel=2
+pkgver=0.11.0
+pkgrel=1
 pkgdesc="A Dictionary Scalper"
 arch=('any')
 depends=("python-beautifulsoup4" "python-pyperclip" "python-requests" "python-pyqt6" "python-hanziconv" "qt6-wayland" "breeze-icons" "xclip")
