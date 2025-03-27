@@ -87,6 +87,10 @@ def get_dictionary_result(word2search: str) -> DictResult:
                     for i in range(len(txt)):
                         c = txt[i]
                         if c in "「（〔":
+                            if "1" <= txt[0] <= "9" and txt[1] in "." and i == 2:
+                                # Example text: 1.〔SC TXT〕xxxxxxxxxxxxxxxx（xxxxxxxxxxxxxxxx）
+                                continue
+
                             # Example text: 1. xx；xx；xx。「(xxx)xxxxxxxxxxxxxxxxxxx｡」
                             # Example text: 2 xxxxx，xxxx（xxxxxxxx）
                             txt_splited = txt.split(c)
