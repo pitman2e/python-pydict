@@ -1,14 +1,16 @@
 import sys
 import pyperclip
 import traceback
-from typing import List
+from typing import List, override
 
 from pydict import da_jp, yahoo_dict
 import os
-from PyQt6 import QtCore, QtWidgets, uic
+from PyQt6 import QtCore, QtWidgets
 from pydict.dict_result import DictResult
 from pydict.logger import Logger
 from enum import Enum
+
+from pydict.ui.main_ui import Ui_mainWindow
 
 UiFileDir: str = os.path.dirname(os.path.dirname(__file__))
 UriFilePath: str = os.path.join(UiFileDir, "pydict", "ui", "dict.ui")
@@ -21,87 +23,72 @@ class DefinitionViewMode(Enum):
 
 class QtGui(QtWidgets.QMainWindow):
     def __init__(self) -> None:
-        super(QtGui, self).__init__()
-        uic.loadUi(UriFilePath, self)
-
-        Logger.set_log_widget(self.lstLog)
+        super().__init__()
+        self.ui = Ui_mainWindow()
+        self.ui.setupUi(self)
+        
+        Logger.set_log_widget(self.ui.lstLog)
 
         self.definition_view_mode = DefinitionViewMode.DEFAULT
-        self.dict_result: DictResult = None
 
-        self.cbbTranType: QtWidgets.QComboBox
-        self.btnCheckNext: QtWidgets.QPushButton
-        self.btnCheck: QtWidgets.QPushButton
-        self.btnCopyWord: QtWidgets.QPushButton
-        self.btnCopyResult: QtWidgets.QPushButton
-        self.txtWord2Check: QtWidgets.QTextEdit
-        self.txtSuggestion: QtWidgets.QTextEdit
-        self.txtResult: QtWidgets.QTextEdit
-        self.txtWord: QtWidgets.QTextEdit
-        self.lstHistory: QtWidgets.QListWidget
-        self.lblStatus: QtWidgets.QLabel
-        self.cbxIsMultiline: QtWidgets.QCheckBox
-        self.lstLog: QtWidgets.QListWidget
-        self.btnToggleRaw: QtWidgets.QPushButton
+        self.ui.btnCheck.clicked.connect(self.btn_check_clicked)
+        self.ui.btnCheckNext.clicked.connect(self.btn_check_next_clicked)
+        self.ui.btnToggleRaw.clicked.connect(self.btn_toggle_raw_clicked)
+        self.ui.lstHistory.currentItemChanged.connect(self.lst_history_current_item_changed)
 
-        self.btnCheck.clicked.connect(self.btn_check_clicked)
-        self.btnCheckNext.clicked.connect(self.btn_check_next_clicked)
-        self.btnToggleRaw.clicked.connect(self.btn_toggle_raw_clicked)
-        self.lstHistory.currentItemChanged.connect(self.lst_history_current_item_changed)
+        self.ui.cbbTranType.addItem("EN")
+        self.ui.cbbTranType.addItem("JP")
 
-        self.cbbTranType.addItem("EN")
-        self.cbbTranType.addItem("JP")
-        
-        self.btnCopyResult.clicked.connect(lambda : pyperclip.copy(self.txtResult.toPlainText()))
-        self.btnCopyWord.clicked.connect(lambda : pyperclip.copy(self.txtWord.text()))
-        #self.txtResult.installEventFilter(self) # No longer needed since copy function exists, keep for ref
-        self.txtWord2Check.installEventFilter(self)
-        self.cbbTranType.currentTextChanged.connect(self.cbb_tran_type_current_text_changed)
-        self.txtWord2Check.setFocus()
-        
+        self.ui.btnCopyResult.clicked.connect(lambda: pyperclip.copy(self.ui.txtResult.toPlainText()))
+        self.ui.btnCopyWord.clicked.connect(lambda: pyperclip.copy(self.ui.txtWord.text()))
+        # self.txtResult.installEventFilter(self) # No longer needed since copy function exists, keep for ref
+        self.ui.txtWord2Check.installEventFilter(self)
+        self.ui.cbbTranType.currentTextChanged.connect(self.cbb_tran_type_current_text_changed)
+        self.ui.txtWord2Check.setFocus()
+
         Logger.log("Program initialised")
 
     # Do not modify function name, meant to override
     def eventFilter(self, source: QtCore.QObject, event: QtCore.QEvent) -> bool:
-        if source is self.txtWord2Check:
+        if source is self.ui.txtWord2Check:
             if event.type() == QtCore.QEvent.Type.KeyPress:
-                if (event.modifiers() == QtCore.Qt.Modifier.SHIFT) or not self.cbxIsMultiline.isChecked():
+                if (event.modifiers() == QtCore.Qt.Modifier.SHIFT) or not self.ui.cbxIsMultiline.isChecked():
                     if (event.key() == QtCore.Qt.Key.Key_Enter) or (event.key() == QtCore.Qt.Key.Key_Return):
                         self.btn_check_clicked()
                         return True
             if event.type() == QtCore.QEvent.Type.FocusIn:
-                if not self.cbxIsMultiline.isChecked():
-                    if len(self.txtWord2Check.toPlainText()) > 0: #If selectAll at empty box => cursor not appearing
+                if not self.ui.cbxIsMultiline.isChecked():
+                    if len(self.ui.txtWord2Check.toPlainText()) > 0: #If selectAll at empty box => cursor not appearing
                         # https://www.qtcentre.org/threads/31705-selectAll-in-QLineEdit-does-not-work?p=277477#post277477
                         # Workaround mouse click cancels selectAll()
-                        QtCore.QTimer.singleShot(0, lambda: self.txtWord2Check.selectAll())
+                        QtCore.QTimer.singleShot(0, lambda: self.ui.txtWord2Check.selectAll())
                         return True
                     
         return False
 
     def cbb_tran_type_current_text_changed(self) -> None:
         dict_result_hist.clear()
-        self.lstHistory.currentItemChanged.disconnect(self.lst_history_current_item_changed)
-        self.lstHistory.clear()
-        self.lstHistory.currentItemChanged.connect(self.lst_history_current_item_changed)
+        self.ui.lstHistory.currentItemChanged.disconnect(self.lst_history_current_item_changed)
+        self.ui.lstHistory.clear()
+        self.ui.lstHistory.currentItemChanged.connect(self.lst_history_current_item_changed)
 
     
     def lst_history_current_item_changed(self, current: QtWidgets.QListWidgetItem, prev: QtWidgets.QListWidgetItem) -> None:
         word_to_change: str = current.text()
-        word_to_check: str = self.txtWord2Check.toPlainText()
+        word_to_check: str = self.ui.txtWord2Check.toPlainText()
         words_2_check: List[str] = word_to_check.split("\n")
 
-        if self.cbxIsMultiline.isChecked():
+        if self.ui.cbxIsMultiline.isChecked():
             if word_to_change in words_2_check:
                 words_2_check.remove(word_to_change)
-            self.txtWord2Check.setText(word_to_change + "\n" + "\n".join(words_2_check))
+            self.ui.txtWord2Check.setText(word_to_change + "\n" + "\n".join(words_2_check))
         else:
-            self.txtWord2Check.setText(word_to_change)
+            self.ui.txtWord2Check.setText(word_to_change)
         
         if word_to_change in dict_result_hist:
-            self.txtResult.setText(dict_result_hist[word_to_change].definition)
-            self.txtSuggestion.setText("")
-            self.txtWord.setText("")
+            self.ui.txtResult.setText(dict_result_hist[word_to_change].definition)
+            self.ui.txtSuggestion.setText("")
+            self.ui.txtWord.setText("")
 
     # Do not modify function name, meant to override
     def closeEvent(self, event) -> None:
@@ -109,21 +96,21 @@ class QtGui(QtWidgets.QMainWindow):
 
     def btn_check_clicked(self) -> None:
         new_item = QtWidgets.QListWidgetItem()
-        new_item_text = self.txtWord2Check.toPlainText()
+        new_item_text = self.ui.txtWord2Check.toPlainText()
         new_item.setText(new_item_text)
 
         if new_item_text not in dict_result_hist:
-            self.lstHistory.insertItem(0, new_item)
-            self.get_dictionary_result(self.txtWord2Check.toPlainText())
+            self.ui.lstHistory.insertItem(0, new_item)
+            self.get_dictionary_result(self.ui.txtWord2Check.toPlainText())
         else:
             self.definition_view_mode = DefinitionViewMode.DEFAULT
             self.apply_ui_dict_result(dict_result_hist[new_item_text])
 
     def btn_check_next_clicked(self) -> None:
-        words = self.txtWord2Check.toPlainText().split("\n")
-        if self.txtWord.text() == words[0]:
+        words = self.ui.txtWord2Check.toPlainText().split("\n")
+        if self.ui.txtWord.text() == words[0]:
             if len(words) > 1:
-                self.txtWord2Check.setText("\n".join(words[1:]))
+                self.ui.txtWord2Check.setText("\n".join(words[1:]))
                 self.get_dictionary_result(words[1])
         else:
             self.get_dictionary_result(words[0])
@@ -134,13 +121,13 @@ class QtGui(QtWidgets.QMainWindow):
 
 
     def get_dictionary_result(self, word2search: str) -> None:
-        self.btnCheck.setDisabled(True)
+        self.ui.btnCheck.setDisabled(True)
 
         try:
 
-            if self.cbbTranType.currentText() == "JP":
+            if self.ui.cbbTranType.currentText() == "JP":
                 result = da_jp.get_dictionary_result(word2search)
-            elif self.cbbTranType.currentText() == "EN":
+            elif self.ui.cbbTranType.currentText() == "EN":
                 result = yahoo_dict.check_en_zh(word2search)
             else:
                 raise Exception("Unrecognised Dictionary Type")
@@ -153,28 +140,28 @@ class QtGui(QtWidgets.QMainWindow):
             self.dict_result = result
 
         except Exception:
-            self.txtResult.setText("An error has occured: \n" + traceback.format_exc())
+            self.ui.txtResult.setText("An error has occured: \n" + traceback.format_exc())
         finally:
-            self.btnCheck.setDisabled(False)
+            self.ui.btnCheck.setDisabled(False)
 
     def apply_ui_dict_result(self, result: DictResult):
         if result.is_success:
-            self.txtWord.setText(result.word)
+            self.ui.txtWord.setText(result.word)
             if self.definition_view_mode == DefinitionViewMode.DEFAULT:
-                self.txtResult.setText(result.definition)
-                self.btnToggleRaw.setText("Toggle Raw(DF)")
+                self.ui.txtResult.setText(result.definition)
+                self.ui.btnToggleRaw.setText("Toggle Raw(DF)")
             elif self.definition_view_mode == DefinitionViewMode.TC:
-                self.txtResult.setText(result.definition_tc)
-                self.btnToggleRaw.setText("Toggle Raw(TC)")
+                self.ui.txtResult.setText(result.definition_tc)
+                self.ui.btnToggleRaw.setText("Toggle Raw(TC)")
             elif self.definition_view_mode == DefinitionViewMode.RAW:
-                self.txtResult.setText(result.definition_raw)
-                self.btnToggleRaw.setText("Toggle Raw(RW)")
+                self.ui.txtResult.setText(result.definition_raw)
+                self.ui.btnToggleRaw.setText("Toggle Raw(RW)")
 
-            self.lblStatus.setText("")
+            self.ui.lblStatus.setText("")
         else:
-            self.lblStatus.setText("Word definition not found")
+            self.ui.lblStatus.setText("Word definition not found")
 
-        self.txtSuggestion.setText(result.suggestion)
+        self.ui.txtSuggestion.setText(result.suggestion)
 
 def run() -> None:
     app = QtWidgets.QApplication(sys.argv)

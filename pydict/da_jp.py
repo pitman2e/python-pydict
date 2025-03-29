@@ -41,9 +41,9 @@ def get_dictionary_result(word2search: str) -> DictResult:
     if not word2search:
         return DictResult()
 
-    suburl1 = "dict"
-    suburl2 = "asia"
-    url = f"https://www.{suburl1}.{suburl2}/jc/{word2search}"
+    sub_url_1 = "dict"
+    sub_url_2 = "asia"
+    url = f"https://www.{sub_url_1}.{sub_url_2}/jc/{word2search}"
 
     response = requests.get(url=url, verify=False)
     response.encoding = "utf-8"
@@ -95,9 +95,9 @@ def get_dictionary_result(word2search: str) -> DictResult:
 
                             # Example text: 1. xx；xx；xx。「(xxx)xxxxxxxxxxxxxxxxxxx｡」
                             # Example text: 2 xxxxx，xxxx（xxxxxxxx）
-                            txt_splited = txt.split(c)
-                            txt_splited[0] = to_traditional(txt_splited[0])
-                            recombined_txt = c.join(txt_splited)
+                            txt_split = txt.split(c) # Pass tense of split is split?!?
+                            txt_split[0] = to_traditional(txt_split[0])
+                            recombined_txt = c.join(txt_split)
                             results.append(recombined_txt)
                             is_processed = True
                             break
@@ -105,10 +105,10 @@ def get_dictionary_result(word2search: str) -> DictResult:
                     if not is_processed:
                         results.append(txt)
 
-        resultStr = "\n".join(results)
+        result_str = "\n".join(results)
         result_str_raw = "\n".join(results_raw)
 
-        return DictResult(suggestion="", is_success=True, definition=resultStr, definition_raw=result_str_raw, word=word2search)
+        return DictResult(suggestion="", is_success=True, definition=result_str, definition_raw=result_str_raw, word=word2search)
     else:
         return DictResult()
 
