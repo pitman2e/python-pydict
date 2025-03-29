@@ -1,7 +1,9 @@
 import sys
 import pyperclip
 import traceback
-from typing import List, override
+from typing import List
+
+from PyQt6.QtGui import QKeyEvent
 
 from pydict import da_jp, yahoo_dict
 import os
@@ -52,6 +54,7 @@ class QtGui(QtWidgets.QMainWindow):
     def eventFilter(self, source: QtCore.QObject, event: QtCore.QEvent) -> bool:
         if source is self.ui.txtWord2Check:
             if event.type() == QtCore.QEvent.Type.KeyPress:
+                event: QKeyEvent
                 if (event.modifiers() == QtCore.Qt.Modifier.SHIFT) or not self.ui.cbxIsMultiline.isChecked():
                     if (event.key() == QtCore.Qt.Key.Key_Enter) or (event.key() == QtCore.Qt.Key.Key_Return):
                         self.btn_check_clicked()
