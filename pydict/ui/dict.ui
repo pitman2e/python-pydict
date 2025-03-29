@@ -85,7 +85,7 @@
              </size>
             </property>
             <property name="inputMethodHints">
-             <set>Qt::ImhNone</set>
+             <set>Qt::InputMethodHint::ImhNone</set>
             </property>
             <property name="documentTitle">
              <string/>
@@ -201,7 +201,7 @@
          <widget class="QListWidget" name="lstHistory">
           <property name="minimumSize">
            <size>
-            <width>50</width>
+            <width>100</width>
             <height>0</height>
            </size>
           </property>

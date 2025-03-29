@@ -105,7 +105,7 @@ class Ui_mainWindow(object):
         self.verticalLayout.addWidget(self.lblStatus)
         self.horizontalLayout_5.addLayout(self.verticalLayout)
         self.lstHistory = QtWidgets.QListWidget(parent=self.horizontalTabWidgetPage1)
-        self.lstHistory.setMinimumSize(QtCore.QSize(50, 0))
+        self.lstHistory.setMinimumSize(QtCore.QSize(100, 0))
         self.lstHistory.setMaximumSize(QtCore.QSize(100, 16777215))
         self.lstHistory.setObjectName("lstHistory")
         self.horizontalLayout_5.addWidget(self.lstHistory)
