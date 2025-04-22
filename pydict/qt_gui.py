@@ -16,7 +16,6 @@ from pydict.ui.main_ui import Ui_mainWindow
 
 UiFileDir: str = os.path.dirname(os.path.dirname(__file__))
 UriFilePath: str = os.path.join(UiFileDir, "pydict", "ui", "dict.ui")
-dict_result_hist: dict[str, DictResult] = {}
 
 class DefinitionViewMode(Enum):
     DEFAULT = 0
@@ -40,6 +39,12 @@ class QtGui(QtWidgets.QMainWindow):
 
         self.ui.cbbTranType.addItem("EN")
         self.ui.cbbTranType.addItem("JP")
+        self.current_lang = self.ui.cbbTranType.currentText()
+
+        self.dict_result_hist = {
+            "EN": {},
+            "JP": {},
+        }
 
         self.ui.btnCopyResult.clicked.connect(lambda: pyperclip.copy(self.ui.txtResult.toPlainText()))
         self.ui.btnCopyWord.clicked.connect(lambda: pyperclip.copy(self.ui.txtWord.text()))
@@ -70,9 +75,11 @@ class QtGui(QtWidgets.QMainWindow):
         return False
 
     def cbb_tran_type_current_text_changed(self) -> None:
-        dict_result_hist.clear()
+        self.current_lang = self.ui.cbbTranType.currentText()
         self.ui.lstHistory.currentItemChanged.disconnect(self.lst_history_current_item_changed)
         self.ui.lstHistory.clear()
+        for k in self.dict_result_hist[self.current_lang].keys():
+            self.ui.lstHistory.insertItem(0, k)
         self.ui.lstHistory.currentItemChanged.connect(self.lst_history_current_item_changed)
 
     
@@ -88,8 +95,8 @@ class QtGui(QtWidgets.QMainWindow):
         else:
             self.ui.txtWord2Check.setText(word_to_change)
         
-        if word_to_change in dict_result_hist:
-            self.ui.txtResult.setText(dict_result_hist[word_to_change].definition)
+        if word_to_change in self.dict_result_hist[self.current_lang]:
+            self.ui.txtResult.setText(self.dict_result_hist[self.current_lang][word_to_change].definition)
             self.ui.txtSuggestion.setText("")
             self.ui.txtWord.setText("")
 
@@ -102,12 +109,12 @@ class QtGui(QtWidgets.QMainWindow):
         new_item_text = self.ui.txtWord2Check.toPlainText()
         new_item.setText(new_item_text)
 
-        if new_item_text not in dict_result_hist:
+        if new_item_text not in self.dict_result_hist[self.current_lang]:
             self.ui.lstHistory.insertItem(0, new_item)
             self.get_dictionary_result(self.ui.txtWord2Check.toPlainText())
         else:
             self.definition_view_mode = DefinitionViewMode.DEFAULT
-            self.apply_ui_dict_result(dict_result_hist[new_item_text])
+            self.apply_ui_dict_result(self.dict_result_hist[self.current_lang][new_item_text])
 
     def btn_check_next_clicked(self) -> None:
         words = self.ui.txtWord2Check.toPlainText().split("\n")
@@ -139,7 +146,7 @@ class QtGui(QtWidgets.QMainWindow):
                 self.definition_view_mode = DefinitionViewMode.DEFAULT
 
             self.apply_ui_dict_result(result)
-            dict_result_hist[result.word] = result
+            self.dict_result_hist[self.current_lang][result.word] = result
             self.dict_result = result
 
         except Exception:
