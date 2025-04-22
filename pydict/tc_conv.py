@@ -5,13 +5,18 @@ def to_traditional_cond(txt: str) -> str:
     rtv = ""
     # The dictionary's value has no usage, just for reference
     excluded_c = {
-        "出", "齣",
-        "面", "麵",
-        "表", "錶",
-        "曲", "麯",
-        "回", "迴",
-        "借", "藉",
-        "向", "嚮",
+        "出": "齣",
+        "面": "麵",
+        "表": "錶",
+        "曲": "麯",
+        "回": "迴",
+        "借": "藉",
+        "向": "嚮",
+        "旋": "鏇",
+        "合": "閤",
+        "別": "彆",
+        "才": "纔",
+        #"干": "乾",
     }
 
     for c in txt:
