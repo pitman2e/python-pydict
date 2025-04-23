@@ -87,7 +87,7 @@ class QtGui(QtWidgets.QMainWindow):
         self.ui.lstHistory.currentItemChanged.connect(self.lst_history_current_item_changed)
 
     
-    def lst_history_current_item_changed(self, current: QtWidgets.QListWidgetItem, prev: QtWidgets.QListWidgetItem) -> None:
+    def lst_history_current_item_changed(self, current: QtWidgets.QListWidgetItem, _: QtWidgets.QListWidgetItem) -> None:
         word_to_change: str = current.text()
         word_to_check: str = self.ui.txtWord2Check.toPlainText()
         words_2_check: List[str] = word_to_check.split("\n")
