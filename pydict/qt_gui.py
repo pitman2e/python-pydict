@@ -5,7 +5,7 @@ from typing import List
 
 from PyQt6.QtGui import QKeyEvent
 
-from pydict import da_jp, yahoo_dict
+from pydict import da_jp, yahoo_dict, dict_result
 import os
 from PyQt6 import QtCore, QtWidgets
 from pydict.dict_result import DictResult
@@ -46,6 +46,7 @@ class QtGui(QtWidgets.QMainWindow):
             "JP": {},
         }
         self.dict_result_hist_cur_lang = self.dict_result_hist[self.current_lang]
+        self.dict_result: dict_result = None
 
         self.ui.btnCopyResult.clicked.connect(lambda: pyperclip.copy(self.ui.txtResult.toPlainText()))
         self.ui.btnCopyWord.clicked.connect(lambda: pyperclip.copy(self.ui.txtWord.text()))
