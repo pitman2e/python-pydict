@@ -153,7 +153,7 @@ class QtGui(QtWidgets.QMainWindow):
             self.dict_result = result
 
         except Exception:
-            self.ui.txtResult.setText("An error has occured: \n" + traceback.format_exc())
+            self.ui.txtResult.setText("An error has occurred: \n" + traceback.format_exc())
         finally:
             self.ui.btnCheck.setDisabled(False)
 
