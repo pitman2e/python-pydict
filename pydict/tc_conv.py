@@ -16,6 +16,7 @@ def to_traditional_cond(txt: str) -> str:
         "合": "閤",
         "別": "彆",
         "才": "纔",
+        "了": "瞭",
         #"干": "乾",
     }
 
