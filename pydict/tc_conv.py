@@ -18,6 +18,7 @@ def to_traditional_cond(txt: str) -> str:
         "才": "纔",
         "了": "瞭",
         "志": "誌",
+        "蔑": "衊"
         #"干": "乾",
     }
 
