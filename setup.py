@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="pydict",
-    version="0.14.2",
+    version="0.14.3",
     author="pitman2e",
     author_email="pitman2e at gm__l c_m",
     description="A Dictionary Scalper",
