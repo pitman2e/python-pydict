@@ -37,13 +37,13 @@ class QtGui(QtWidgets.QMainWindow):
         self.ui.btnToggleRaw.clicked.connect(self.btn_toggle_raw_clicked)
         self.ui.lstHistory.currentItemChanged.connect(self.lst_history_current_item_changed)
 
-        self.ui.cbbTranType.addItem("EN")
         self.ui.cbbTranType.addItem("JP")
+        self.ui.cbbTranType.addItem("EN")
         self.current_lang = self.ui.cbbTranType.currentText()
 
         self.dict_result_hist = {
-            "EN": {},
             "JP": {},
+            "EN": {},
         }
         self.dict_result_hist_cur_lang = self.dict_result_hist[self.current_lang]
         self.dict_result: dict_result = None
