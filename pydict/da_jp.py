@@ -151,8 +151,9 @@ def get_dictionary_result(word2search: str) -> DictResult:
 
                             # Example text: 1. xx；xx；xx。「(xxx)xxxxxxxxxxxxxxxxxxx｡」
                             # Example text: 2 xxxxx，xxxx（xxxxxxxx）
-                            txt_split = txt.split(c) # Pass tense of split is split?!?
-                            txt_split[0] = to_traditional(txt_split[0])
+                            txt_split = txt.split(c)  # Pass tense of split is split?!?
+                            for j in range(len(txt_split) - 1):
+                                txt_split[j] = to_traditional(txt_split[j])
                             recombined_txt = c.join(txt_split)
                             results.append(recombined_txt)
                             is_processed = True
