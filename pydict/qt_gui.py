@@ -1,7 +1,7 @@
 import sys
 import pyperclip
 import traceback
-from typing import List
+from typing import List, Optional
 
 from PyQt6.QtGui import QKeyEvent
 
@@ -46,7 +46,7 @@ class QtGui(QtWidgets.QMainWindow):
             "EN": {},
         }
         self.dict_result_hist_cur_lang = self.dict_result_hist[self.current_lang]
-        self.dict_result: dict_result = None
+        self.dict_result: Optional[DictResult] = None
 
         self.ui.btnCopyResult.clicked.connect(lambda: pyperclip.copy(self.ui.txtResult.toPlainText()))
         self.ui.btnCopyWord.clicked.connect(lambda: pyperclip.copy(self.ui.txtWord.text()))
