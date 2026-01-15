@@ -100,7 +100,8 @@ class QtGui(QtWidgets.QMainWindow):
             self.ui.txtWord2Check.setText(word_to_change)
         
         if word_to_change in self.dict_result_hist_cur_lang:
-            self.ui.txtResult.setText(self.dict_result_hist_cur_lang[word_to_change].definition)
+            self.dict_result = self.dict_result_hist_cur_lang[word_to_change]
+            self.ui.txtResult.setText(self.dict_result.definition)
             self.ui.txtSuggestion.setText("")
             self.ui.txtWord.setText("")
 
