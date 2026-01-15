@@ -4,7 +4,7 @@ pkgver=0.14.4
 pkgrel=1
 pkgdesc="A Dictionary Scalper"
 arch=('any')
-depends=("python-beautifulsoup4" "python-pyperclip" "python-requests" "python-pyqt6" "python-hanziconv" "qt6-wayland" "breeze-icons" "xclip")
+depends=("python-beautifulsoup4" "python-pyperclip" "python-requests" "python-pyqt6" "qt6-wayland" "breeze-icons" "xclip")
 makedepends=('git' 'python>=3.10')
 conflicts=()
 provides=()

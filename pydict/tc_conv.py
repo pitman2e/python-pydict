@@ -1,5 +1,6 @@
-from hanziconv import HanziConv
+import opencc
 
+converter = opencc.OpenCC('s2t.json')
 
 def to_traditional_cond(txt: str) -> str:
     rtv = ""
@@ -27,6 +28,6 @@ def to_traditional_cond(txt: str) -> str:
         if c in excluded_c:
             rtv = rtv + c
         else:
-            rtv = rtv + HanziConv.toTraditional(c)
+            rtv = rtv + converter.convert(c)
 
     return rtv
