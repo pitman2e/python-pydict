@@ -5,7 +5,7 @@ from typing import List, Optional
 
 from PyQt6.QtGui import QKeyEvent
 
-from pydict import da_jp, yahoo_dict, dict_result
+from pydict import da_jp, yahoo_dict
 import os
 from PyQt6 import QtCore, QtWidgets
 from pydict.dict_result import DictResult

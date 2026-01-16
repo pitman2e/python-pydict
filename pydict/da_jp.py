@@ -98,8 +98,8 @@ def get_dictionary_result(word2search: str) -> DictResult:
 
     tabs = doc.select("#jp_comment")        
 
-    results = []
-    results_raw = []
+    results: List[str] = []
+    results_raw: List[str] = []
 
     if tabs:
         for tab in tabs[:1]:
