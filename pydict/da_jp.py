@@ -1,3 +1,5 @@
+from typing import List
+
 from pydict.dict_result import DictResult
 from bs4 import BeautifulSoup
 import requests
@@ -141,26 +143,7 @@ def get_dictionary_result(word2search: str) -> DictResult:
                             results.append(txt[:sep_idx] + to_traditional(txt[sep_idx:]))
                             continue
 
-                    is_processed = False
-                    for i in range(len(txt)):
-                        c = txt[i]
-                        if c in "「（〔":
-                            if "1" <= txt[0] <= "9" and txt[1] in "." and i == 2:
-                                # Example text: 1.〔SC TXT〕xxxxxxxxxxxxxxxx（xxxxxxxxxxxxxxxx）
-                                continue
-
-                            # Example text: 1. xx；xx；xx。「(xxx)xxxxxxxxxxxxxxxxxxx｡」
-                            # Example text: 2 xxxxx，xxxx（xxxxxxxx）
-                            txt_split = txt.split(c)  # Pass tense of split is split?!?
-                            for j in range(len(txt_split) - 1):
-                                txt_split[j] = to_traditional(txt_split[j])
-                            recombined_txt = c.join(txt_split)
-                            results.append(recombined_txt)
-                            is_processed = True
-                            break
-
-                    if not is_processed:
-                        results.append(txt)
+                    sc2tc_part_definition(txt, results)
 
         result_str = "\n".join(results)
         result_str_raw = "\n".join(results_raw)
@@ -168,6 +151,29 @@ def get_dictionary_result(word2search: str) -> DictResult:
         return DictResult(suggestion="", is_success=True, definition=result_str, definition_raw=result_str_raw, word=word2search)
     else:
         return DictResult()
+
+def sc2tc_part_definition(txt: str, results: List[str]) -> None:
+    is_processed = False
+
+    for i in range(len(txt)):
+        c = txt[i]
+        if c in "「（〔":
+            if "1" <= txt[0] <= "9" and txt[1] in "." and i == 2:
+                # Example text: 1.〔SC TXT〕xxxxxxxxxxxxxxxx（xxxxxxxxxxxxxxxx）
+                continue
+
+            # Example text: 1. xx；xx；xx。「(xxx)xxxxxxxxxxxxxxxxxxx｡」
+            # Example text: 2 xxxxx，xxxx（xxxxxxxx）
+            txt_split = txt.split(c)  # Pass tense of split is split?!?
+            for j in range(len(txt_split) - 1):
+                txt_split[j] = to_traditional(txt_split[j])
+            recombined_txt = c.join(txt_split)
+            results.append(recombined_txt)
+            is_processed = True
+            break
+
+    if not is_processed:
+        results.append(txt)
 
 def to_traditional(txt: str) -> str:
     seps = "〉〈()。・（）［］、,./\\〔〕·,.|-+!~\n\t《》[]:：\"'；"
