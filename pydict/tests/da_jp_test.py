@@ -26,3 +26,22 @@ class TestSc2Tc(unittest.TestCase):
         pydict.da_jp.sc2tc_part_definition(txt, results)
 
         self.assertEqual(results[0], "2.（簡）簡簡（簡単な日本語。）")
+
+
+    def test_sc2tc_part_definition_2(self):
+        # 当てつけ
+        txt = "あい简えお"
+        results = []
+        pydict.da_jp.sc2tc_part_definition(txt, results)
+
+        self.assertEqual(results[0], txt)
+
+
+    def test_sc2tc_part_definition_3(self):
+        # 当てつけ
+        txt = "简简, 简简"
+        results = []
+        pydict.da_jp.sc2tc_part_definition(txt, results)
+
+        self.assertEqual(results[0], "簡簡, 簡簡")
+

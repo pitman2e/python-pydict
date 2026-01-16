@@ -173,7 +173,7 @@ def sc2tc_part_definition(txt: str, results: List[str]) -> None:
             break
 
     if not is_processed:
-        results.append(txt)
+        results.append(to_traditional(txt))
 
 def to_traditional(txt: str) -> str:
     seps = "〉〈()。・（）［］、,./\\〔〕·,.|-+!~\n\t《》[]:：\"'；"
